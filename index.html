@@ -1,11 +1,6 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <script>
-  if (location.hash && location.hash.includes('invite_token')) {
-    location.href = '/admin/' + location.hash; // envoie l’invite vers l’admin
-  }
-</script>
   <meta charset="utf-8">
   <title>BudgetMariage – Simulateur Budget Mariage Gratuit</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,6 +34,11 @@
     footer{padding:28px 0;color:#6b7280;font-size:13px}
     .chip{background:#fff8;backdrop-filter: blur(10px);border:1px solid #eee;padding:6px 10px;border-radius:999px}
   </style>
+  <script>
+  if (location.hash && location.hash.includes('invite_token')) {
+    location.href = '/admin/' + location.hash; // envoie l’invite vers l’admin
+  }
+</script>
 </head>
 <body>
   <div class="container">
