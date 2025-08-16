@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>BudgetMariage – Simulateur Budget Mariage Gratuit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Calculez le budget de votre mariage en 30 secondes : nombre d'invités, style, région. Estimation gratuite + répartition des postes.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>💍</text></svg>">
+  <style>
+    :root{--brand:#7b5cff;--brand2:#ff78b5;--bg:#faf8ff}
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,Arial;background:var(--bg);color:#1f2937}
+    .container{max-width:980px;margin:auto;padding:24px}
+    .badge{display:inline-block;font-size:12px;padding:4px 8px;border-radius:999px;background:linear-gradient(90deg,var(--brand),var(--brand2));color:#fff}
+    header{display:flex;align-items:center;gap:10px;padding:18px 0}
+    header h1{font-size:22px;margin:0;font-weight:800}
+    .card{background:#fff;border:1px solid #eee;border-radius:14px;padding:18px;box-shadow:0 6px 18px rgba(20,20,40,.04)}
+    .grid{display:grid;gap:14px}
+    @media(min-width:900px){.grid{grid-template-columns:1.2fr .8fr}}
+    .section-title{font-weight:800;margin:4px 0 8px}
+    .pillrow{display:flex;gap:8px;flex-wrap:wrap}
+    .pill button{border:1px solid #e5e7eb;background:#fff;padding:8px 12px;border-radius:999px;cursor:pointer}
+    .pill button.active{border-color:var(--brand);box-shadow:0 0 0 2px rgba(123,92,255,.2)}
+    .selectwrap{background:#f5f3ff;border:1px solid #e9e6ff;padding:10px;border-radius:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    select,input[type=number]{border:1px solid #d9d6ff;border-radius:8px;padding:8px 10px;min-width:160px}
+    .cta{background:linear-gradient(90deg,var(--brand),var(--brand2));color:#fff;border:none;border-radius:10px;padding:12px 16px;font-weight:700;cursor:pointer}
+    .muted{color:#6b7280;font-size:13px}
+    .result{font-size:32px;font-weight:900}
+    .row{display:flex;justify-content:space-between;margin:6px 0}
+    .bar{height:8px;border-radius:6px;background:#f3f4f6;overflow:hidden}
+    .bar > span{display:block;height:100%;background:linear-gradient(90deg,var(--brand),var(--brand2))}
+    .ads{display:grid;gap:12px}
+    .ads .slot{background:#f1f5f9;border:1px dashed #cbd5e1;border-radius:10px;padding:12px;text-align:center;color:#64748b;font-size:12px}
+    .faq details{background:#fff;border:1px solid #eee;border-radius:12px;padding:14px}
+    footer{padding:28px 0;color:#6b7280;font-size:13px}
+    .chip{background:#fff8;backdrop-filter: blur(10px);border:1px solid #eee;padding:6px 10px;border-radius:999px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge">Gratuit</span>
+      <h1>BudgetMariage</h1>
+      <span class="chip">Simulateur instantané</span>
+    </header>
+
+    <div class="grid">
+      <section class="card">
+        <h2 class="section-title">Calculez votre budget 💍</h2>
+
+        <div class="pillrow" id="guestsPills">
+          <span class="pill"><button data-val="30">30 invités</button></span>
+          <span class="pill"><button data-val="50">50</button></span>
+          <span class="pill"><button data-val="80" class="active">80</button></span>
+          <span class="pill"><button data-val="120">120</button></span>
+          <span class="pill"><button data-val="200">200</button></span>
+          <span class="pill"><button data-val="custom">Autre…</button></span>
+          <input id="guestsInput" type="number" min="5" max="500" value="80" style="width:96px;display:none">
+        </div>
+
+        <div class="selectwrap" style="margin-top:10px">
+          <label>Style&nbsp;</label>
+          <select id="style">
+            <option value="petit">Petit budget</option>
+            <option value="standard" selected>Standard</option>
+            <option value="chic">Chic</option>
+          </select>
+          <label>Région&nbsp;</label>
+          <select id="region">
+            <option value="province" selected>Province</option>
+            <option value="idf">Île-de-France</option>
+            <option value="dom">DOM-TOM</option>
+          </select>
+        </div>
+
+        <div class="selectwrap" style="margin-top:10px">
+          <label>Imprévus&nbsp;(%)</label>
+          <select id="buffer">
+            <option value="0">0%</option>
+            <option value="5">5%</option>
+            <option value="10" selected>10%</option>
+            <option value="15">15%</option>
+          </select>
+        </div>
+
+        <div style="display:flex;gap:10px;align-items:center;margin-top:14px">
+          <button class="cta" id="calcBtn">Calculer</button>
+          <span class="muted">Estimation indicative basée sur moyennes FR.</span>
+        </div>
+
+        <hr style="margin:18px 0;border:none;border-top:1px solid #eee">
+
+        <div id="out" style="display:none">
+          <div class="muted">Budget estimé</div>
+          <div class="result" id="total">€</div>
+          <div id="breakdown"></div>
+          <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+            <a class="cta" href="#" id="ctaPack">Télécharger la checklist PDF</a>
+            <a class="cta" style="background:#111" href="#" id="ctaAff">Voir robes & déco</a>
+          </div>
+          <div class="muted" style="margin-top:6px">* Liens partenaires possibles.</div>
+        </div>
+      </section>
+
+      <aside class="grid" style="grid-template-columns:1fr">
+        <div class="ads">
+          <div class="slot">Emplacement pub #1 (300×250)</div>
+          <div class="slot">Emplacement pub #2 (300×600)</div>
+          <div class="slot">Emplacement pub #3 (responsive)</div>
+        </div>
+        <section class="card">
+          <h3 class="section-title">Pourquoi ce simulateur ?</h3>
+          <p class="muted">Rapide, gratuit, pensé pour vous guider en 30 secondes. Pas d’inscription obligatoire.</p>
+          <ul>
+            <li>💨 Estimation instantanée</li>
+            <li>📊 Répartition par postes</li>
+            <li>🧠 Conseils pour économiser</li>
+          </ul>
+        </section>
+      </aside>
+    </div>
+
+    <section class="faq" style="margin-top:20px">
+      <h2 class="section-title">FAQ – Budget de mariage</h2>
+      <div class="grid" style="grid-template-columns:1fr 1fr">
+        <details><summary>Combien coûte un mariage de 80 invités ?</summary><p>Selon le style et la région, entre 8 000 € et 16 000 € en moyenne. Utilisez le simulateur ci-dessus pour une estimation personnalisée.</p></details>
+        <details><summary>Quelle part du budget pour le traiteur ?</summary><p>Souvent 45–60 % du total. Le reste : tenues, photo/vidéo, déco/fleurs, musique, mairie, divers.</p></details>
+        <details><summary>Comment réduire la facture ?</summary><p>Hors saison, jour en semaine, menu plus court, bar à vin plutôt que champagne, DJ plutôt que groupe live.</p></details>
+        <details><summary>Est-ce fiable ?</summary><p>Estimation basée sur moyennes + multiplicateurs (région, style, invités). Pour un devis précis, comparez plusieurs prestataires.</p></details>
+      </div>
+    </section>
+
+    <footer>© <span id="y"></span> BudgetMariage.com — Outil gratuit</footer>
+  </div>
+
+  <script>
+    const pills = document.querySelectorAll('#guestsPills button');
+    const guestsInput = document.getElementById('guestsInput');
+    const styleSel = document.getElementById('style');
+    const regionSel = document.getElementById('region');
+    const bufferSel = document.getElementById('buffer');
+    const out = document.getElementById('out');
+    const totalEl = document.getElementById('total');
+    const breakdown = document.getElementById('breakdown');
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    pills.forEach(b=>b.addEventListener('click',()=>{
+      pills.forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      const v = b.dataset.val;
+      if(v==='custom'){ guestsInput.style.display='inline-block'; guestsInput.focus(); }
+      else { guestsInput.style.display='none'; guestsInput.value=v; }
+    }));
+    guestsInput.value = 80;
+
+    function euros(n){return n.toLocaleString('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0});}
+    function calc(){
+      const guests = Math.max(5, Math.min(500, parseInt(guestsInput.value||80,10)));
+      const style = styleSel.value; const region = regionSel.value; const buffer = parseInt(bufferSel.value,10)/100;
+      let perGuest = 70; if(style==='petit') perGuest*=0.75; if(style==='chic') perGuest*=1.5;
+      let regionMult = 1.0; if(region==='idf') regionMult = 1.2; if(region==='dom') regionMult = 1.1;
+      const fixed = 1800 * (style==='chic'?1.4:(style==='petit'?0.8:1));
+      let base = (perGuest*guests*regionMult) + (fixed*regionMult);
+      base *= (1+buffer);
+      const parts = [
+        ['Lieu & Traiteur', 0.58],
+        ['Tenues & Alliances', 0.10],
+        ['Photo / Vidéo', 0.08],
+        ['Décoration & Fleurs', 0.07],
+        ['Musique / Animation', 0.07],
+        ['Divers & Imprévus', 0.10],
+      ];
+      out.style.display = 'block';
+      totalEl.textContent = euros(base);
+      breakdown.innerHTML = parts.map(([label,ratio])=>{
+        const val = base*ratio;
+        return `<div class="row"><span>${label}</span><strong>${euros(val)}</strong></div>
+                <div class="bar"><span style="width:${Math.round(ratio*100)}%"></span></div>`;
+      }).join('');
+      document.body.animate([{transform:'scale(1)'},{transform:'scale(1.01)'},{transform:'scale(1)'}],{duration:300});
+    }
+    document.getElementById('calcBtn').addEventListener('click',calc); calc();
+  </script>
+</body>
+</html>
