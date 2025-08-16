@@ -1,6 +1,11 @@
 <!doctype html>
 <html lang="fr">
 <head>
+  <script>
+  if (location.hash && location.hash.includes('invite_token')) {
+    location.href = '/admin/' + location.hash; // envoie l’invite vers l’admin
+  }
+</script>
   <meta charset="utf-8">
   <title>BudgetMariage – Simulateur Budget Mariage Gratuit</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
