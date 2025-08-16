@@ -1,35 +1,28 @@
-<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BudgetMariage CMS</title>
-<script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-<!-- Widget Identity à charger pour accepter l'invitation -->
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-<script>
-  // Recharge l'admin après login pour éviter de rester bloqué
-  if (window.netlifyIdentity) {
-    window.netlifyIdentity.on('init', user => {
-      if (!user) window.netlifyIdentity.on('login', () => window.location.reload());
-    });
-  }
-</script>
-<script>
-CMS.init({
-  config: {
-    backend: { name: "git-gateway", branch: "main" },
-    media_folder: "static/uploads",
-    public_folder: "/static/uploads",
-    collections: [{
-      name: "budgets", label: "Pages Budget", folder: "content/budgets",
-      create: true, slug: "{{slug}}", extension: "md",
-      fields: [
-        {name:"title", label:"Titre (H1)", widget:"string"},
-        {name:"seo_title", label:"SEO Title", widget:"string"},
-        {name:"seo_desc", label:"Meta Description", widget:"string"},
-        {name:"slug", label:"Slug (ex: budget-mariage-80-invites)", widget:"string"},
-        {name:"permalink", label:"Permalink (ex: budget-mariage-80-invites/index.html)", widget:"string"},
-        {name:"tags", label:"Tags", widget:"list", default:["budget"]},
-        {name:"body", label:"Contenu", widget:"markdown"}
-      ]
-    }]
-  }
-});
-</script>
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BudgetMariage CMS</title>
+</head>
+<body>
+  <!-- Script principal du CMS -->
+  <script src="https://unpkg.com/decap-cms@3.0.0/dist/decap-cms.js"></script>
+  
+  <!-- Script pour Netlify Identity -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+  <!-- Initialisation -->
+  <script>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.reload();
+          });
+        }
+      });
+    }
+  </script>
+</body>
+</html>
