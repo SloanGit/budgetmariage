@@ -1,0 +1,16 @@
+[build]
+  command = "npm run build"
+  publish = "_site"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+  Referrer-Policy = "strict-origin-when-cross-origin"
+  X-Frame-Options = "SAMEORIGIN"
+  X-Content-Type-Options = "nosniff"
+
+# 404 propre (utile sur Netlify)
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
