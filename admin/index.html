@@ -1,0 +1,25 @@
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BudgetMariage CMS</title>
+<script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+<script>
+CMS.init({
+  config: {
+    backend: { name: "git-gateway", branch: "main" },
+    media_folder: "static/uploads",
+    public_folder: "/static/uploads",
+    collections: [{
+      name: "budgets", label: "Pages Budget", folder: "content/budgets",
+      create: true, slug: "{{slug}}", extension: "md",
+      fields: [
+        {name:"title", label:"Titre (H1)", widget:"string"},
+        {name:"seo_title", label:"SEO Title", widget:"string"},
+        {name:"seo_desc", label:"Meta Description", widget:"string"},
+        {name:"slug", label:"Slug (ex: budget-mariage-80-invites)", widget:"string"},
+        {name:"permalink", label:"Permalink (ex: budget-mariage-80-invites/index.html)", widget:"string"},
+        {name:"tags", label:"Tags", widget:"list", default:["budget"]},
+        {name:"body", label:"Contenu", widget:"markdown"}
+      ]
+    }]
+  }
+});
+</script>
