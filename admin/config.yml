@@ -1,0 +1,22 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "static/uploads"
+public_folder: "/static/uploads"
+
+collections:
+  - name: "budgets"
+    label: "Pages Budget"
+    folder: "content/budgets"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    fields:
+      - { name: "title", label: "Titre (H1)", widget: "string" }
+      - { name: "seo_title", label: "SEO Title", widget: "string" }
+      - { name: "seo_desc", label: "Meta Description", widget: "string" }
+      - { name: "slug", label: "Slug", widget: "string" }
+      - { name: "permalink", label: "Permalink", widget: "string" }
+      - { name: "tags", label: "Tags", widget: "list", default: ["budget"] }
+      - { name: "body", label: "Contenu", widget: "markdown" }
