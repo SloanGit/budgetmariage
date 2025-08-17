@@ -1,34 +1,18 @@
----
-layout: base.njk
-title: "BudgetMariage – Simulateur de budget de mariage (express & avancé)"
-seo_desc: "Calculez gratuitement le budget de votre mariage en 30 secondes. Mode express et avancé, répartition par postes, conseils & outils premium."
----
+{% extends "base.njk" %}
 
-{% include "simulateur.njk" %}
+{% block content %}
 
-<!-- Section Derniers articles (déjà créée dans _includes/home-latest.njk) -->
-<section class="card" style="margin-top:14px">
-  <div style="text-align:center;margin-bottom:10px">
-    <a class="cta" href="/blog/">Voir tous les articles</a>
-  </div>
+  {% include "simulateur.njk" %}
+
+  <section class="intro">
+    <h2>Votre budget de mariage, clair en 30 secondes</h2>
+    <p>
+      Notre simulateur gratuit propose deux modes : <b>Express</b> (invités, style, région) et 
+      <b>Avancé</b> (budget global à répartir par postes). 
+      Les estimations s’appuient sur des moyennes en France.
+    </p>
+  </section>
+
   {% include "home-latest.njk" %}
-</section>
 
-<!-- 3 guides populaires (exemples statiques, tu peux remplacer les liens) -->
-<section class="card" style="margin-top:14px">
-  <h2 class="section-title">Guides populaires</h2>
-  <div class="three-grid">
-    <a class="card-link" href="/budget-mariage-50-invites/">
-      <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=800" alt="">
-      <h3>Budget mariage 50 invités</h3>
-    </a>
-    <a class="card-link" href="/budget-mariage-100-invites/">
-      <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=800" alt="">
-      <h3>Budget mariage 100 invités</h3>
-    </a>
-    <a class="card-link" href="/budget-mariage-petit-prix/">
-      <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=800" alt="">
-      <h3>Mariage petit budget : le guide</h3>
-    </a>
-  </div>
-</section>
+{% endblock %}
