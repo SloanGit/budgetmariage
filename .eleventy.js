@@ -1,16 +1,15 @@
-module.exports = function(eleventyConfig) {
-  // Copie le dossier /static tel quel vers _site/static
+module.exports = function (eleventyConfig) {
+  // Copie /static tel quel vers _site/static
   eleventyConfig.addPassthroughCopy({ "static": "static" });
 
   return {
-    // On travaille à la racine
     dir: {
-      input: ".",
-      includes: ".",     // <- IMPORTANT : pas de dossier _includes requis
-      data: "src/_data", // ok s'il existe ; sinon supprime cette ligne
-      output: "_site"
+      input: ".",        // on build depuis la racine
+      includes: ".",     // pas de dossier _includes requis
+      // ⚠️ si tu n'as PAS src/_data, ne mets pas de ligne 'data'
+      output: "_site"    // dossier de sortie
     },
-    templateFormats: ["njk","md","html"],
+    templateFormats: ["njk", "md", "html"],
     markdownTemplateEngine: "njk",
     htmlTemplateEngine: "njk"
   };
