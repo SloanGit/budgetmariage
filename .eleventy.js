@@ -1,0 +1,27 @@
+// .eleventy.js (CommonJS)
+const { DateTime } = require("luxon");
+
+module.exports = function(eleventyConfig) {
+  // Laisse passer ces dossiers tels quels vers _site
+  eleventyConfig.addPassthroughCopy("admin");
+  eleventyConfig.addPassthroughCopy("static");
+
+  // Filtre Nunjucks: {{ page.date | date("dd LLL yyyy") }}
+  eleventyConfig.addFilter("date", (dateObj, format = "dd LLL yyyy") => {
+    const d = (dateObj instanceof Date) ? dateObj : new Date(dateObj);
+    return DateTime.fromJSDate(d, { zone: "utc" }).toFormat(format);
+  });
+
+  return {
+    dir: {
+      input: ".",          // on lit depuis la racine du repo
+      includes: "_includes",
+      layouts: "_includes",
+      data: "src/_data",
+      output: "_site"
+    },
+    markdownTemplateEngine: "njk",
+    htmlTemplateEngine: "njk",
+    templateFormats: ["njk","md","html"]
+  };
+};
