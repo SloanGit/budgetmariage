@@ -1,16 +1,24 @@
-{% extends "base.njk" %}
+---
+title: BudgetMariage – Accueil
+layout: base.njk
+---
 
 {% block content %}
 
   {% include "simulateur.njk" %}
 
-  <section class="intro">
-    <h2>Votre budget de mariage, clair en 30 secondes</h2>
-    <p>
-      Notre simulateur gratuit propose deux modes : <b>Express</b> (invités, style, région) et 
-      <b>Avancé</b> (budget global à répartir par postes). 
-      Les estimations s’appuient sur des moyennes en France.
-    </p>
+  <section class="intro" style="margin:8px 0 24px;">
+    <div style="border:1px solid #ddd;border-radius:10px;padding:16px;background:#fff;">
+      <!-- DEBUG: si tu lis ceci, index.njk rend bien le contenu -->
+      <div style="font-size:12px;color:#999;margin-bottom:8px;">[DEBUG index]</div>
+
+      <h2 style="margin:0 0 8px; font-size:18px; color:#2e6b56;">Votre budget de mariage, clair en 30 secondes</h2>
+      <p style="margin:0;">
+        Notre simulateur gratuit propose deux modes : <b>Express</b> (invités, style, région) et
+        <b>Avancé</b> (budget global à répartir par postes). Les estimations s’appuient sur des
+        moyennes en France.
+      </p>
+    </div>
   </section>
 
   {% include "home-latest.njk" %}
