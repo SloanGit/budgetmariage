@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>BudgetMariage – Simulateur de budget de mariage (express & avancé)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Calculez gratuitement le budget de votre mariage en 30 secondes. Mode express et avancé, répartition par postes, conseils & outils premium.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
+
+  <!-- Favicon (anneau) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>💍</text></svg>">
+
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
+  <script>
+    if (location.hash && location.hash.includes('invite_token')) {
+      location.href = '/admin/' + location.hash;
+    }
+  </script>
+
+  <style>
+    /* ... (tes styles inchangés) ... */
+    .blog-preview{margin-top:20px}
+    .posts-grid{display:grid;gap:16px}
+    @media(min-width:900px){.posts-grid{grid-template-columns:repeat(3,1fr)}}
+    .post-card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column}
+    .post-card img{width:100%;height:140px;object-fit:cover}
+    .post-card h3{font-size:16px;margin:10px 12px;color:var(--brand)}
+    .post-card p{font-size:14px;color:var(--muted);margin:0 12px 12px}
+    .all-posts-link{text-align:center;margin-top:12px}
+    .all-posts-link .btn{background:var(--brand);color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:600}
+  </style>
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+  <div class="container">
+    <!-- ... (tout ton contenu inchangé jusqu’au footer) ... -->
+
+    <!-- 3 cartes guides populaires -->
+    <section class="card" style="margin-top:14px">
+      <h2 class="section-title">Guides populaires</h2>
+      <div class="three-grid">
+        <a class="card-link" href="/budget-mariage-50-invites/">
+          <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=800" alt="">
+          <h3>Budget mariage 50 invités</h3>
+        </a>
+        <a class="card-link" href="/budget-mariage-100-invites/">
+          <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=800" alt="">
+          <h3>Budget mariage 100 invités</h3>
+        </a>
+        <a class="card-link" href="/budget-mariage-petit-prix/">
+          <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=800" alt="">
+          <h3>Mariage petit budget : le guide</h3>
+        </a>
+      </div>
+    </section>
+
+    <!-- 🔥 Derniers articles dynamiques -->
+    <section class="card blog-preview">
+      <h2 class="section-title">Derniers articles du blog</h2>
+      <div class="posts-grid">
+        {% for post in collections.posts | reverse | slice(0,3) %}
+          <a class="post-card" href="{{ post.url }}">
+            {% if post.data.cover %}
+              <img src="{{ post.data.cover }}" alt="{{ post.data.title }}">
+            {% endif %}
+            <h3>{{ post.data.title }}</h3>
+            <p>{{ post.data.excerpt | safe }}</p>
+          </a>
+        {% endfor %}
+      </div>
+      <div class="all-posts-link">
+        <a href="/blog/" class="btn">Voir tous les articles</a>
+      </div>
+    </section>
+
+    <footer>© <span id="y"></span> BudgetMariage.com — Outil gratuit</footer>
+  </div>
+
+  <script>
+    // ... (tes scripts inchangés) ...
+  </script>
+</body>
+</html>
