@@ -5,8 +5,11 @@ backend:
 media_folder: "static/uploads"
 public_folder: "/static/uploads"
 
+# (optionnel) commente si tu ne veux pas le mode brouillon/validation
+# publish_mode: editorial_workflow
+
 collections:
-  # (Tu gardes ta collection budgets si tu l'utilises)
+  # ============ PAGES BUDGET / SIMULATEUR ============
   - name: "budgets"
     label: "Pages Budget"
     folder: "content/budgets"
@@ -16,14 +19,14 @@ collections:
     preview_path: "{{slug}}/"
     fields:
       - { name: "title", label: "Titre (H1)", widget: "string" }
-      - { name: "seo_title", label: "SEO Title", widget: "string" }
-      - { name: "seo_desc", label: "Meta Description", widget: "string" }
+      - { name: "seo_title", label: "SEO Title", widget: "string", required: false }
+      - { name: "seo_desc", label: "Meta Description", widget: "string", required: false }
       - { name: "permalink", label: "Permalink (ex: budget-mariage-100-invites/index.html)", widget: "string" }
       - { name: "tags", label: "Tags", widget: "list", default: ["budget"] }
       - { name: "layout", label: "Layout", widget: "hidden", default: "budget.njk" }
       - { name: "body", label: "Contenu", widget: "markdown" }
 
-  # ✅ Collection unique pour toutes les pages du site (FAQ, À propos, Contact, Mentions, etc.)
+  # ============ PAGES FIXES (FAQ, A propos, Contact, Mentions…) ============
   - name: "pages"
     label: "Pages"
     folder: "content/pages"
@@ -44,6 +47,8 @@ collections:
           - { label: "Page standard", value: "page.njk" }
           - { label: "Page contact (formulaire)", value: "contact.njk" }
       - { name: "body", label: "Contenu", widget: "markdown" }
+
+  # ============ BLOG / ARTICLES ============
   - name: "posts"
     label: "Articles"
     folder: "content/posts"
