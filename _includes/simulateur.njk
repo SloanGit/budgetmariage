@@ -1,299 +1,33 @@
-<section class="top-ad">
-  <ins class="adsbygoogle"
-       style="display:block"
-       data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-       data-ad-slot="1111111111"
-       data-ad-format="auto"
-       data-full-width-responsive="true"></ins>
-  <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
-  <div class="ad-slot" id="ad-fallback-top" style="display:none">Emplacement pub (Top banner)</div>
+<section class="simulateur">
+  <h1>Calculez votre budget</h1>
+
+  <!-- simulateur express -->
+  <div class="simulateur-express">
+    <button>30</button>
+    <button>50</button>
+    <button>80</button>
+    <button>120</button>
+    <button>200</button>
+    <button>Autre…</button>
+  </div>
+
+  <!-- Résultats -->
+  <div class="simulateur-resultat">
+    <h2>Budget estimé : 5713 €</h2>
+    <ul>
+      <li>Lieu & Traiteur — 3314 €</li>
+      <li>Tenues & Alliances — 571 €</li>
+      <li>Photo / Vidéo — 457 €</li>
+      <li>Décoration & Fleurs — 400 €</li>
+      <li>Musique / Animation — 400 €</li>
+      <li>Divers & imprévus — 571 €</li>
+    </ul>
+  </div>
+
+  <!-- Boutons -->
+  <div class="simulateur-actions">
+    <a href="#" class="btn">Outils Premium & Packs</a>
+    <a href="#" class="btn">Sélection partenaires : robes</a>
+    <a href="#" class="btn">Sélection partenaires : déco</a>
+  </div>
 </section>
-
-<div class="grid">
-  <!-- LEFT -->
-  <section class="card" style="padding-top:10px">
-    <h2 class="section-title" style="margin-top:0">Calculez votre budget</h2>
-    <div class="mode-tabs">
-      <button id="modeExpress" class="active">Mode express</button>
-      <button id="modeAvance">Mode avancé</button>
-    </div>
-
-    <!-- EXPRESS -->
-    <div id="express">
-      <div class="pillrow" id="guestsPills" style="margin-top:8px">
-        <span class="pill"><button data-val="30">30</button></span>
-        <span class="pill"><button data-val="50" class="active">50</button></span>
-        <span class="pill"><button data-val="80">80</button></span>
-        <span class="pill"><button data-val="120">120</button></span>
-        <span class="pill"><button data-val="200">200</button></span>
-        <span class="pill"><button data-val="custom">Autre…</button></span>
-        <input id="guestsInput" type="number" min="5" max="500" value="50" style="width:96px;display:none">
-      </div>
-
-      <div class="selectwrap" style="margin-top:10px">
-        <label>Style</label>
-        <select id="style">
-          <option value="petit">Petit budget</option>
-          <option value="standard" selected>Standard</option>
-          <option value="chic">Chic</option>
-        </select>
-        <label>Région</label>
-        <select id="region">
-          <!-- Régions -->
-          <option value="idf">Île-de-France</option>
-          <option value="paca">Provence-Alpes-Côte d'Azur</option>
-          <option value="ara">Auvergne-Rhône-Alpes</option>
-          <option value="na">Nouvelle-Aquitaine</option>
-          <option value="occ">Occitanie</option>
-          <option value="pdl">Pays de la Loire</option>
-          <option value="bre">Bretagne</option>
-          <option value="nor">Normandie</option>
-          <option value="hdf">Hauts-de-France</option>
-          <option value="ge">Grand Est</option>
-          <option value="cvl">Centre-Val de Loire</option>
-          <option value="bfc">Bourgogne-Franche-Comté</option>
-          <option value="cor">Corse</option>
-          <option value="gua">Guadeloupe</option>
-          <option value="mar">Martinique</option>
-          <option value="guy">Guyane</option>
-          <option value="reu">La Réunion</option>
-          <option value="may">Mayotte</option>
-          <option value="province" selected>Province (moyenne)</option>
-        </select>
-        <label>Imprévus (%)</label>
-        <select id="buffer">
-          <option value="0">0%</option>
-          <option value="5">5%</option>
-          <option value="10" selected>10%</option>
-          <option value="15">15%</option>
-        </select>
-      </div>
-
-      <div style="display:flex;gap:10px;align-items:center;margin-top:14px">
-        <button class="cta" id="calcBtn">Calculer</button>
-        <span class="muted">Estimation indicative basée sur moyennes FR.</span>
-      </div>
-
-      <div class="inline-ad" style="margin-top:10px">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-             data-ad-slot="2222222222"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
-        <div class="ad-slot" id="ad-fallback-inline" style="display:none">Emplacement pub (inline)</div>
-      </div>
-
-      <hr class="hr">
-
-      <div id="out" style="display:none">
-        <div class="muted">Budget estimé</div>
-        <div class="result" id="total">€</div>
-        <div id="breakdown"></div>
-        <div class="cta-grid">
-          <a class="cta-premium" href="/packs.html">Outils Premium &amp; Packs</a>
-          <a class="cta-ghost" href="/affiliations.html">Sélection partenaires →</a>
-        </div>
-        <div class="muted" style="margin-top:6px">* Liens partenaires possibles.</div>
-      </div>
-    </div>
-
-    <!-- AVANCÉ -->
-    <div id="avance" style="display:none;margin-top:8px">
-      <div class="selectwrap">
-        <label>Budget total (€)</label>
-        <input id="totalBudgetInput" type="number" min="0" value="15000">
-        <label>Invités</label>
-        <input id="totalGuestsInput" type="number" min="5" value="100" style="width:120px">
-      </div>
-
-      <p class="muted" style="margin:8px 0">Ajustez la répartition par poste :</p>
-      <div id="sliders"></div>
-      <div style="display:flex;gap:10px;margin-top:8px">
-        <button class="cta" id="applySplit">Appliquer</button>
-        <button class="cta-ghost" id="resetSplit">Réinitialiser</button>
-      </div>
-
-      <hr class="hr">
-
-      <div id="outAdvanced" style="display:none">
-        <div class="muted">Budget total</div>
-        <div class="result" id="totalAdv">€</div>
-        <div id="breakdownAdv"></div>
-
-        <!-- ⚠️ ici on met 3 boutons comme en mode express -->
-        <div class="cta-grid">
-          <a class="cta-premium" href="/packs.html">Outils Premium &amp; Packs</a>
-          <a class="cta-ghost" href="/affiliations.html">Sélection partenaires →</a>
-          <a class="cta-ghost" href="/checklist.pdf">Télécharger la checklist</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- RIGHT -->
-  <aside class="sidebar-sticky">
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-         data-ad-slot="3333333333"
-         data-ad-format="rectangle"
-         data-full-width-responsive="true"></ins>
-    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
-    <div class="ad-slot" id="ad-fallback-side" style="display:none">Emplacement pub (sidebar sticky)</div>
-
-    <section class="card why" style="padding-bottom:10px">
-      <h3 class="section-title" style="margin-bottom:4px">Pourquoi ce simulateur ?</h3>
-      <ul style="margin:0 0 8px 18px">
-        <li>Estimation instantanée</li>
-        <li>Répartition par postes</li>
-        <li>Conseils pour économiser</li>
-      </ul>
-      <div class="partner-grid">
-        <div class="partner">
-          <img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=400" alt="">
-          <div><strong>Robes &amp; tenues</strong><div class="muted">Sélection partenaires</div></div>
-        </div>
-        <div class="partner">
-          <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=400" alt="">
-          <div><strong>Décoration</strong><div class="muted">Pinterest-friendly</div></div>
-        </div>
-      </div>
-      <div class="muted" style="margin-top:6px;font-size:12px">* Liens d’affiliation possibles.</div>
-    </section>
-  </aside>
-</div>
-
-<!-- SEO copy -->
-<section class="card" style="margin-top:14px">
-  <h2 class="section-title">Votre budget de mariage, clair en 30&nbsp;secondes</h2>
-  <p>
-    Notre simulateur gratuit propose deux modes : <strong>Express</strong> (invités, style, région) et
-    <strong>Avancé</strong> (budget global à répartir par poste). Les estimations s’appuient sur des moyennes
-    en France et vous aident à prioriser : lieu &amp; traiteur, tenues &amp; alliances, photo/vidéo,
-    décoration &amp; fleurs, musique/animation, divers &amp; imprévus.
-  </p>
-  <p>
-    Gagnez du temps avec nos <strong>Outils Premium &amp; Packs</strong> (checklists, modèles de budget,
-    rétroplanning) et notre <strong>sélection de partenaires</strong> (faire-part, déco, robes…).
-  </p>
-</section>
-
-<script>
-  // pills
-  const pills = document.querySelectorAll('#guestsPills button');
-  const guestsInput = document.getElementById('guestsInput');
-  pills.forEach(b=>b.addEventListener('click',()=>{
-    pills.forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    const v = b.dataset.val;
-    if(v==='custom'){ guestsInput.style.display='inline-block'; guestsInput.focus(); }
-    else { guestsInput.style.display='none'; guestsInput.value=v; }
-  }));
-  if (!guestsInput.value) guestsInput.value = 50;
-
-  const styleSel = document.getElementById('style');
-  const regionSel = document.getElementById('region');
-  const bufferSel = document.getElementById('buffer');
-  const out = document.getElementById('out');
-  const totalEl = document.getElementById('total');
-  const breakdown = document.getElementById('breakdown');
-
-  // Multiplicateurs région
-  const REGION_MULT = {
-    province:1.00, idf:1.20, paca:1.15, ara:1.10, na:1.02, occ:1.00, pdl:0.99, bre:0.98,
-    nor:0.98, hdf:0.95, ge:0.98, cvl:0.98, bfc:0.97, cor:1.15,
-    gua:1.10, mar:1.10, guy:1.08, reu:1.12, may:1.10
-  };
-
-  function euros(n){return n.toLocaleString('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0});}
-
-  function calcExpress(){
-    const guests = Math.max(5, Math.min(500, parseInt(guestsInput.value||50,10)));
-    const style = styleSel.value; const region = regionSel.value; const buffer = parseInt(bufferSel.value,10)/100;
-    let perGuest = 70; if(style==='petit') perGuest*=0.75; if(style==='chic') perGuest*=1.5;
-    const regionMult = REGION_MULT[region] ?? 1.0;
-    const fixed = 1800 * (style==='chic'?1.4:(style==='petit'?0.8:1));
-    let base = (perGuest*guests*regionMult) + (fixed*regionMult);
-    base *= (1+buffer);
-
-    const parts = [
-      ['Lieu & Traiteur', 0.58],
-      ['Tenues & Alliances', 0.10],
-      ['Photo / Vidéo', 0.08],
-      ['Décoration & Fleurs', 0.07],
-      ['Musique / Animation', 0.07],
-      ['Divers & Imprévus', 0.10],
-    ];
-    out.style.display = 'block';
-    totalEl.textContent = euros(base);
-    breakdown.innerHTML = parts.map(([label,ratio])=>{
-      const val = base*ratio;
-      return `<div class="row"><span>${label}</span><strong>${euros(val)}</strong></div>
-              <div class="bar"><span style="width:${Math.round(ratio*100)}%"></span></div>`;
-    }).join('');
-    confettiBurst();
-  }
-  document.getElementById('calcBtn').addEventListener('click',calcExpress);
-
-  // ----- Mode avancé
-  const defaultSplit = [
-    ['Réception (lieu, cérémonie, matériel)', 35],
-    ['Restauration (vin d’honneur, repas, boissons)', 30],
-    ['Les Mariés (tenues, beauté, alliances)', 10],
-    ['Musique & Animation', 5],
-    ['Cadeaux (invités, famille, témoins)', 3],
-    ['Fleurs & Décoration', 4],
-    ['Papeterie (faire-part, menus, marque-place)', 2],
-    ['Frais administratifs (mairie, église…)', 1],
-    ['Photographie / Vidéo', 4],
-    ['Planification (organisateur)', 0],
-    ['Transport / Hébergement', 2],
-    ['Voyage de noces', 2],
-    ['Divers & Imprévus', 2],
-  ];
-  const slidersBox = document.getElementById('sliders');
-  const totalBudgetInput = document.getElementById('totalBudgetInput');
-  const outAdv = document.getElementById('outAdvanced');
-  const totalAdv = document.getElementById('totalAdv');
-  const breakdownAdv = document.getElementById('breakdownAdv');
-
-  function renderSliders(split=defaultSplit){
-    slidersBox.innerHTML = split.map(([label, pct],i)=>`
-      <div class="slider-row">
-        <span style="min-width:220px">${label}</span>
-        <input type="range" min="0" max="60" value="${pct}" data-i="${i}">
-        <strong style="width:44px;text-align:right"><span class="pct">${pct}</span>%</strong>
-      </div>
-    `).join('');
-    slidersBox.querySelectorAll('input[type=range]').forEach(r=>{
-      r.addEventListener('input',()=>{ r.parentElement.querySelector('.pct').textContent = r.value; });
-    });
-  }
-  renderSliders();
-
-  document.getElementById('applySplit').addEventListener('click',()=>{
-    const total = parseFloat(totalBudgetInput.value||0);
-    const sliders = [...slidersBox.querySelectorAll('input[type=range]')].map(r=>[r.parentElement.firstElementChild.textContent, parseInt(r.value,10)]);
-    const sum = sliders.reduce((s,[_l,p])=>s+p,0);
-    if(sum===0){ outAdv.style.display='none'; return; }
-    outAdv.style.display='block';
-    totalAdv.textContent = euros(total);
-    breakdownAdv.innerHTML = sliders.map(([label,pct])=>{
-      const val = total * (pct/100);
-      return `<div class="row"><span>${label}</span><strong>${euros(val)}</strong></div>
-              <div class="bar"><span style="width:${pct}%"></span></div>`;
-    }).join('');
-    confettiBurst();
-  });
-  document.getElementById('resetSplit').addEventListener('click',()=>renderSliders(defaultSplit));
-
-  // Switch modes
-  const expressBox = document.getElementById('express');
-  const avanceBox = document.getElementById('avance');
-  const btnExpress = document.getElementById('modeExpress');
-  const btnAvance = document.getElementById('modeAvance');
-  btnExpress.addEventListener('click',()=>{btnExpress.classList.add('active');btnAvance.classList.remove('active');expressBox.style.display='block';avanceBox.style.display='none';});
-  btnAvance.addEventListener('click',()=>{btnAvance.classList.add('active');btnExpress.classList.remove('active');expressBox.style.display='none';avanceBox.style.display='block';});
-</script>
