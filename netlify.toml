@@ -1,6 +1,15 @@
 [build]
-  command = "npm install --no-optional --no-audit --no-fund && npm run build"
+  # Install sans audits/optional + build Eleventy
+  command = "npm install --no-audit --fund=false --no-optional && npm run build"
   publish = "_site"
 
 [build.environment]
+  # Versions et logs
   NODE_VERSION = "18"
+  ELEVENTY_ENV = "production"
+
+  # Verbosité npm (affiche plus de détails d’install)
+  NPM_FLAGS = "--verbose"
+
+  # Logs détaillés d’Eleventy et de Nunjucks
+  DEBUG = "@11ty/*,Eleventy:*,nunjucks:*"
