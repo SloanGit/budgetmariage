@@ -6,18 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Calculez gratuitement le budget de votre mariage en 30 secondes. Mode express et avancé, répartition par postes, conseils & outils premium.">
 
-  <!-- Fonts (mariage lisible) -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
 
   <!-- Favicon (anneau) -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>💍</text></svg>">
 
-  <!-- AdSense (remplace ton publisher id) -->
+  <!-- AdSense (remplace le client par le tien) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 
   <script>
-    /* Redirige les liens d'invitation Identity vers /admin */
+    /* Redirige les liens d'invitation Netlify Identity vers /admin */
     if (location.hash && location.hash.includes('invite_token')) {
       location.href = '/admin/' + location.hash;
     }
@@ -25,12 +25,11 @@
 
   <style>
     :root{
-      /* Palette champêtre */
       --brand:#3e5c49;     /* vert sauge foncé */
       --brand-2:#6f8f7b;   /* vert eucalyptus */
       --accent:#c99a6d;    /* or/terracotta doux */
       --bg:#f7f5f1;        /* lin clair */
-      --ink:#21312a;       /* texte */
+      --ink:#21312a;
       --muted:#6f7b74;
       --card:#ffffff;
       --line:#e7e2d9;
@@ -156,7 +155,6 @@
             </select>
             <label>Région</label>
             <select id="region">
-              <!-- Régions métropole -->
               <option value="idf">Île-de-France</option>
               <option value="paca">Provence-Alpes-Côte d'Azur</option>
               <option value="ara">Auvergne-Rhône-Alpes</option>
@@ -170,13 +168,11 @@
               <option value="cvl">Centre-Val de Loire</option>
               <option value="bfc">Bourgogne-Franche-Comté</option>
               <option value="cor">Corse</option>
-              <!-- DROM -->
               <option value="gua">Guadeloupe</option>
               <option value="mar">Martinique</option>
               <option value="guy">Guyane</option>
               <option value="reu">La Réunion</option>
               <option value="may">Mayotte</option>
-              <!-- défaut -->
               <option value="province" selected>Province (moyenne)</option>
             </select>
             <label>Imprévus (%)</label>
@@ -193,7 +189,7 @@
             <span class="muted">Estimation indicative basée sur moyennes FR.</span>
           </div>
 
-          <!-- AD inline (ADSENSE) -->
+          <!-- AD inline -->
           <div class="inline-ad" style="margin-top:10px">
             <ins class="adsbygoogle"
                  style="display:block"
@@ -251,7 +247,7 @@
 
       <!-- RIGHT -->
       <aside class="sidebar-sticky">
-        <!-- AD #sidebar (ADSENSE) -->
+        <!-- AD #sidebar -->
         <ins class="adsbygoogle"
              style="display:block"
              data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
@@ -350,7 +346,7 @@
     const totalEl = document.getElementById('total');
     const breakdown = document.getElementById('breakdown');
 
-    // Multiplicateurs région (ordre de grandeur réalistes)
+    // Multiplicateurs région
     const REGION_MULT = {
       province:1.00, idf:1.20, paca:1.15, ara:1.10, na:1.02, occ:1.00, pdl:0.99, bre:0.98,
       nor:0.98, hdf:0.95, ge:0.98, cvl:0.98, bfc:0.97, cor:1.15,
