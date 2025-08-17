@@ -1,264 +1,34 @@
 ---
-layout: page.njk
-title: BudgetMariage — Simulateur de budget
+layout: base.njk
+title: "BudgetMariage – Simulateur de budget de mariage (express & avancé)"
+seo_desc: "Calculez gratuitement le budget de votre mariage en 30 secondes. Mode express et avancé, répartition par postes, conseils & outils premium."
 ---
 
-<style>
-  /* ====== LAYOUT ====== */
-  .home-grid{display:grid;gap:16px}
-  @media(min-width:1000px){
-    .home-grid{
-      grid-template-columns:1.2fr .8fr;     /* colonne gauche / colonne droite */
-      grid-auto-rows:min-content;
-      align-items:start;
-    }
-    .home-sidebar{ grid-column:2; grid-row:1 / span 3; } /* s’étire sur la hauteur → plus de grand trou blanc */
-    .home-left { grid-column:1; }
-  }
+{% include "simulateur.njk" %}
 
-  /* Cartes et styles légers (laisse ton thème faire le reste) */
-  .card{background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:16px}
-  .muted{font-size:.9rem;opacity:.8}
+<!-- Section Derniers articles (déjà créée dans _includes/home-latest.njk) -->
+<section class="card" style="margin-top:14px">
+  <div style="text-align:center;margin-bottom:10px">
+    <a class="cta" href="/blog/">Voir tous les articles</a>
+  </div>
+  {% include "home-latest.njk" %}
+</section>
 
-  /* CTA */
-  .cta-grid{display:grid;gap:10px}
-  @media(min-width:640px){ .cta-grid{grid-template-columns:1fr 1fr} }
-  .cta, .cta-ghost, .cta-premium{
-    display:inline-block;text-align:center;padding:10px 14px;border-radius:8px;border:1px solid #8a9a7b;
-    text-decoration:none
-  }
-  .cta{background:#8a9a7b;color:#fff;border-color:#8a9a7b}
-  .cta-ghost{background:#fff;color:#2b3a27}
-  .cta-premium{background:#f9f6ef;color:#2b3a27;border-color:#d9cdaa}
-
-  /* Bouton "Voir tous les articles" centré au-dessus du bloc */
-  .blog-head{display:flex;justify-content:center;margin:10px 0 6px}
-  .blog-head .cta-ghost{padding:8px 14px}
-
-  /* Grille des 3 derniers articles (contenu généré) */
-  .latest-grid{display:grid;gap:14px}
-  @media(min-width:760px){ .latest-grid{grid-template-columns:repeat(3,1fr)} }
-  .post-card{border:1px solid #e7e7e7;border-radius:10px;overflow:hidden}
-  .post-card a{color:inherit;text-decoration:none}
-  .post-card img{display:block;width:100%;height:150px;object-fit:cover;background:#f3f3f3}
-  .post-card .p{padding:10px}
-  .post-card h3{font-size:1rem;margin:0 0 6px}
-</style>
-
-<header class="home-left">
-  <!-- logo texte cliquable vers l’accueil -->
-  <h1 class="logo" style="margin:0">
-    <a href="/" style="text-decoration:none;color:inherit">BudgetMariage</a>
-  </h1>
-  <p class="muted" style="margin-top:6px">Simulateur instantané · Estimations FR · Conseils pour économiser</p>
-</header>
-
-<div class="home-grid">
-
-  <!-- ====== COLONNE GAUCHE : SIMULATEUR ====== -->
-  <section class="card home-left" id="simulator">
-    <!-- 👉 Mets ton simulateur actuel ici si tu veux le personnaliser.
-         Par défaut je fournis un mini simulateur fonctionnel -->
-    <h2 style="margin-top:0">Calculez votre budget</h2>
-
-    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-      <label>Invités :
-        <input id="guests" type="number" value="100" min="10" step="10" style="width:90px">
-      </label>
-      <label>Région :
-        <select id="region">
-          <option value="1">France (moyenne)</option>
-          <option value="1.08">Île-de-France (+8%)</option>
-          <option value="0.95">Ouest (-5%)</option>
-        </select>
-      </label>
-      <label>Imprévus :
-        <select id="buffer">
-          <option value="0.10">10%</option>
-          <option value="0.15">15%</option>
-          <option value="0.20">20%</option>
-        </select>
-      </label>
-    </div>
-
-    <div style="margin-top:10px">
-      <button id="modeExpress" class="cta-ghost">Mode express</button>
-      <button id="modeAvance" class="cta">Mode avancé</button>
-    </div>
-
-    <!-- Résultat EXPRESS -->
-    <div id="outExpress" style="margin-top:14px;display:none">
-      <h3 style="margin:0 0 8px">Budget estimé : <span id="totalExpress">—</span></h3>
-      <div class="muted">Répartition indicative par postes & conseils pour économiser.</div>
-      <div class="cta-grid" style="margin-top:10px">
-        <a class="cta-premium" href="/packs.html">Outils Premium & Packs</a>
-        <a class="cta-ghost" href="/affiliations.html">Sélection partenaires : robes, déco →</a>
-      </div>
-      <div class="muted" style="margin-top:6px">* Liens partenaires possibles.</div>
-    </div>
-
-    <!-- Répartition AVANCÉ -->
-    <div id="outAdvanced" style="margin-top:14px;display:none">
-      <h3 style="margin:0 0 8px">Budget total : <span id="totalAdvanced">—</span></h3>
-      <div id="breakdownAdvanced"></div>
-      <!-- Les 3 boutons seront injectés ici par JS -->
-    </div>
-
-    <!-- Contrôles du mode avancé -->
-    <details style="margin-top:12px">
-      <summary>Ajuster les postes (mode avancé)</summary>
-      <div id="slidersBox" style="display:grid;gap:8px;margin-top:10px">
-        <!-- label + slider + % -->
-        <div><strong>Lieu & Traiteur</strong>
-          <input type="range" min="0" max="100" value="58" data-label="Lieu & Traiteur" oninput="this.nextElementSibling.value=this.value+'%'"> <output>58%</output>
-        </div>
-        <div><strong>Tenues & Alliances</strong>
-          <input type="range" min="0" max="100" value="10" data-label="Tenues & Alliances" oninput="this.nextElementSibling.value=this.value+'%'"> <output>10%</output>
-        </div>
-        <div><strong>Photo / Vidéo</strong>
-          <input type="range" min="0" max="100" value="8" data-label="Photo / Vidéo" oninput="this.nextElementSibling.value=this.value+'%'"> <output>8%</output>
-        </div>
-        <div><strong>Décoration & Fleurs</strong>
-          <input type="range" min="0" max="100" value="7" data-label="Décoration & Fleurs" oninput="this.nextElementSibling.value=this.value+'%'"> <output>7%</output>
-        </div>
-        <div><strong>Musique / Animation</strong>
-          <input type="range" min="0" max="100" value="7" data-label="Musique / Animation" oninput="this.nextElementSibling.value=this.value+'%'"> <output>7%</output>
-        </div>
-        <div><strong>Divers & Imprévus</strong>
-          <input type="range" min="0" max="100" value="10" data-label="Divers & Imprévus" oninput="this.nextElementSibling.value=this.value+'%'"> <output>10%</output>
-        </div>
-      </div>
-      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-        <button id="applyExpress" class="cta-ghost">Appliquer (express)</button>
-        <button id="applySplit" class="cta">Appliquer (avancé)</button>
-      </div>
-    </details>
-  </section>
-
-  <!-- ====== COLONNE DROITE : SIDEBAR ====== -->
-  <aside class="card home-sidebar">
-    <h3 style="margin-top:0">Pourquoi ce simulateur ?</h3>
-    <ul>
-      <li>Estimation instantanée</li>
-      <li>Répartition par postes</li>
-      <li>Conseils pour économiser</li>
-    </ul>
-    <div class="muted">* Liens d’affiliation possibles.</div>
-  </aside>
-
-  <!-- ====== GAUCHE : BLOC “SEO” ====== -->
-  <section class="card home-left">
-    <h2 style="margin:4px 0 8px">Votre budget de mariage, clair en 30 secondes</h2>
-    <p>Notre simulateur propose deux modes : <strong>Express</strong> (invités, région, imprévus) et <strong>Avancé</strong> (répartition par postes). Utilisez-le pour cadrer votre budget, arbitrer sereinement et optimiser vos dépenses.</p>
-  </section>
-
-  <!-- ====== GAUCHE : DERNIERS ARTICLES ====== -->
-  <section class="card home-left">
-    <div class="blog-head">
-      <a class="cta-ghost" href="/blog/">Voir tous les articles →</a>
-    </div>
-
-    <div class="latest-grid">
-      {# 3 derniers posts #}
-      {% for post in collections.posts | slice(0,3) %}
-        <article class="post-card">
-          <a href="{{ post.url | url }}">
-            {% if post.data.cover %}
-              <img src="{{ post.data.cover }}" alt="">
-            {% else %}
-              <img src="/static/placeholder-16x9.png" alt="">
-            {% endif %}
-            <div class="p">
-              <h3>{{ post.data.title }}</h3>
-              <div class="muted">{{ post.date | date("dd LLL yyyy") }}</div>
-            </div>
-          </a>
-        </article>
-      {% endfor %}
-    </div>
-  </section>
-
-</div> <!-- /.home-grid -->
-
-<script>
-  /* ======= Mini simulateur ======= */
-  const guests = document.getElementById('guests');
-  const region = document.getElementById('region');
-  const buffer = document.getElementById('buffer');
-  const modeExpressBtn = document.getElementById('modeExpress');
-  const modeAvanceBtn  = document.getElementById('modeAvance');
-  const outExp = document.getElementById('outExpress');
-  const outAdv = document.getElementById('outAdvanced');
-  const totalExp = document.getElementById('totalExpress');
-  const totalAdv = document.getElementById('totalAdvanced');
-  const breakdownAdv = document.getElementById('breakdownAdvanced');
-  const slidersBox = document.getElementById('slidersBox');
-
-  const euros = n => (Math.round(n).toLocaleString('fr-FR') + ' €');
-
-  function baseTotal(){
-    const g = parseInt(guests.value || 0, 10);
-    const r = parseFloat(region.value || 1);
-    const b = parseFloat(buffer.value || 0.1);
-    // base rapide ~ 40€ / invité * 100 = 4000 — on grossit un peu par défaut
-    const base = g * 120;
-    return base * r * (1 + b);
-  }
-
-  function showExpress(){
-    outAdv.style.display = 'none';
-    outExp.style.display = 'block';
-    totalExp.textContent = euros(baseTotal());
-  }
-  function showAdvanced(){
-    outExp.style.display = 'none';
-    outAdv.style.display = 'block';
-    totalAdv.textContent = euros(baseTotal());
-  }
-
-  document.getElementById('applyExpress').addEventListener('click', showExpress);
-  document.getElementById('applySplit').addEventListener('click', ()=>{
-    const total = baseTotal();
-    totalAdv.textContent = euros(total);
-
-    const sliders = [...slidersBox.querySelectorAll('input[type=range]')].map(r=>{
-      return { label: r.dataset.label, pct: parseInt(r.value,10) };
-    });
-    const sum = sliders.reduce((s,x)=>s+x.pct,0) || 1;
-
-    breakdownAdv.innerHTML = sliders.map(x=>{
-      const val = total * (x.pct/sum);
-      return `
-        <div class="row" style="display:flex;justify-content:space-between;margin:6px 0">
-          <span>${x.label}</span><strong>${euros(val)}</strong>
-        </div>
-        <div class="bar" style="height:6px;background:#eee;border-radius:999px;overflow:hidden;margin-bottom:6px">
-          <span style="display:block;height:100%;width:${x.pct}%;background:#8a9a7b"></span>
-        </div>`;
-    }).join('');
-
-    // ---- BOUTONS (3) sous le breakdown ----
-    const buttonsHtml = `
-      <div class="cta-grid" style="margin-top:10px">
-        <a class="cta-premium" href="/packs.html">Outils Premium & Packs (checklists, modèles)</a>
-        <a class="cta-ghost" href="/affiliations.html">Sélection partenaires : robes, déco →</a>
-        <a class="cta" href="/checklist.pdf" download>Télécharger la checklist</a>
-      </div>
-      <div class="muted" style="margin-top:6px">* Liens partenaires possibles.</div>
-    `;
-    // on supprime les anciens boutons s’il y en avait déjà
-    const old = outAdv.querySelector('.cta-grid');
-    if(old) old.parentElement.removeChild(old.nextElementSibling || old);
-    const old2 = outAdv.querySelector('.cta-grid');
-    if(old2){ old2.remove(); }
-    breakdownAdv.insertAdjacentHTML('afterend', buttonsHtml);
-
-    showAdvanced();
-  });
-
-  modeExpressBtn.addEventListener('click', showExpress);
-  modeAvanceBtn.addEventListener('click', showAdvanced);
-
-  // Init
-  showExpress();
-</script>
+<!-- 3 guides populaires (exemples statiques, tu peux remplacer les liens) -->
+<section class="card" style="margin-top:14px">
+  <h2 class="section-title">Guides populaires</h2>
+  <div class="three-grid">
+    <a class="card-link" href="/budget-mariage-50-invites/">
+      <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=800" alt="">
+      <h3>Budget mariage 50 invités</h3>
+    </a>
+    <a class="card-link" href="/budget-mariage-100-invites/">
+      <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=800" alt="">
+      <h3>Budget mariage 100 invités</h3>
+    </a>
+    <a class="card-link" href="/budget-mariage-petit-prix/">
+      <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=800" alt="">
+      <h3>Mariage petit budget : le guide</h3>
+    </a>
+  </div>
+</section>
