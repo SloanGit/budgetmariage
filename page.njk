@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>{{ seo_title or title }} | BudgetMariage</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% if seo_desc %}<meta name="description" content="{{ seo_desc }}">{% endif %}
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--brand:#3e5c49;--bg:#f7f5f1;--line:#e7e2d9;--ink:#21312a;--muted:#6f7b74}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui}
+    h1,h2,h3{font-family:"Playfair Display",serif;color:#3e5c49}
+    .wrap{max-width:960px;margin:auto;padding:22px}
+    header{display:flex;gap:8px;align-items:center}
+    header a{margin-left:auto;text-decoration:none;border:1px solid var(--brand);padding:8px 12px;border-radius:10px;color:var(--brand)}
+    main{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 10px 26px rgba(62,92,73,.06)}
+    footer{color:var(--muted);font-size:13px;padding:24px 0}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <strong>BudgetMariage</strong>
+      <a href="/index.html">← Simulateur</a>
+    </header>
+    <main>
+      <h1>{{ title }}</h1>
+      <article class="prose">
+        {{ content | safe }}
+      </article>
+    </main>
+    <footer>© {{ now | date("yyyy") }} BudgetMariage.com</footer>
+  </div>
+</body>
+</html>
