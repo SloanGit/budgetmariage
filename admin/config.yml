@@ -44,3 +44,21 @@ collections:
           - { label: "Page standard", value: "page.njk" }
           - { label: "Page contact (formulaire)", value: "contact.njk" }
       - { name: "body", label: "Contenu", widget: "markdown" }
+  - name: "posts"
+    label: "Articles"
+    folder: "content/posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: "md"
+    preview_path: "blog/{{slug}}/"
+    fields:
+      - { name: "title", label: "Titre", widget: "string" }
+      - { name: "seo_title", label: "SEO Title", widget: "string", required: false }
+      - { name: "seo_desc", label: "Meta Description", widget: "string", required: false }
+      - { name: "date", label: "Date", widget: "datetime" }
+      - { name: "cover", label: "Image de couverture", widget: "image", required: false }
+      - { name: "tags", label: "Tags", widget: "list", default: ["post"] }
+      - { name: "permalink", label: "Permalink (ex: blog/mon-article/index.html)", widget: "string" }
+      - { name: "layout", label: "Layout", widget: "hidden", default: "post.njk" }
+      - { name: "excerpt", label: "Résumé (intro)", widget: "text", required: false }
+      - { name: "body", label: "Contenu", widget: "markdown" }
