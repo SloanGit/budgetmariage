@@ -1,20 +1,14 @@
 module.exports = function(eleventyConfig) {
-  // Fichiers copiés tels quels
-  eleventyConfig.addPassthroughCopy("static");
-  eleventyConfig.addPassthroughCopy("admin");
-  eleventyConfig.addPassthroughCopy("index.html");
-  eleventyConfig.addPassthroughCopy("robots.txt");
-  eleventyConfig.addPassthroughCopy("404.html");
+  eleventyConfig.addPassthroughCopy({"static":"static"}); // si tu as un dossier /static
+  eleventyConfig.addWatchTarget("static");
 
   return {
+    templateFormats: ["njk","md","html"],
     dir: {
       input: ".",
-      includes: ".",
+      includes: "_includes",   // crée-le si tu veux des includes plus tard
       data: "src/_data",
       output: "_site"
-    },
-    templateFormats: ["njk","md","html"],
-    htmlTemplateEngine: "njk",
-    markdownTemplateEngine: "njk"
+    }
   };
 };
