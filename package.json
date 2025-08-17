@@ -1,9 +1,10 @@
 {
+  "name": "budgetmariage",
+  "private": true,
   "scripts": {
-    "build": "eleventy",
-    "start": "eleventy --serve --port=8080"
+    "build": "eleventy"
   },
   "devDependencies": {
-    "@11ty/eleventy": "^2.0.0"
+    "@11ty/eleventy": "^2.0.1"
   }
 }
