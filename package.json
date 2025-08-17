@@ -1,14 +1,14 @@
 {
   "name": "budgetmariage",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "eleventy",
-    "dev": "eleventy --serve --quiet"
+    "dev": "eleventy --serve --quiet",
+    "postbuild": "cp -r admin _site/admin || true"
   },
   "devDependencies": {
-    "@11ty/eleventy": "^2.0.1"
-  },
-  "engines": {
-    "node": ">=18"
+    "@11ty/eleventy": "2.0.1",
+    "nunjucks": "3.2.4"
   }
 }
