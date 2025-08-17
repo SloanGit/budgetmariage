@@ -1,8 +1,15 @@
 // .eleventy.cjs
+const { DateTime } = require("luxon");
+
 module.exports = function(eleventyConfig) {
   // Laisse Netlify CMS et /static passer tels quels
   eleventyConfig.addPassthroughCopy("admin");
   eleventyConfig.addPassthroughCopy("static");
+
+  // Ajout du filtre date
+  eleventyConfig.addFilter("date", (dateObj, format = "dd LLL yyyy") => {
+    return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat(format);
+  });
 
   return {
     // On compile depuis la racine du repo
@@ -18,4 +25,3 @@ module.exports = function(eleventyConfig) {
     templateFormats: ["njk", "md", "html"]
   };
 };
-
