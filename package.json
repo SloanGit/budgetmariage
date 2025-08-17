@@ -2,9 +2,13 @@
   "name": "budgetmariage",
   "private": true,
   "scripts": {
-    "build": "eleventy"
+    "build": "eleventy",
+    "dev": "eleventy --serve --quiet"
   },
   "devDependencies": {
     "@11ty/eleventy": "^2.0.1"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
