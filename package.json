@@ -1,7 +1,6 @@
 {
   "name": "budgetmariage",
   "private": true,
-  "type": "module",
   "scripts": {
     "build": "eleventy",
     "dev": "eleventy --serve --quiet",
