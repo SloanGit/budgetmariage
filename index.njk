@@ -1,26 +1,206 @@
----
-title: BudgetMariage – Accueil
-layout: base.njk
----
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BudgetMariage – Simulateur instantané</title>
+  <style>
+    :root{
+      --bg:#fbfaf7; --card:#ffffff; --border:#e7e2d9;
+      --text:#2f2a25; --muted:#6b655f;
+      --brand:#2e6b56; --accent:#b6803a;
+      --radius:12px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;line-height:1.45}
+    a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
+    .wrap{max-width:1120px;margin:0 auto;padding:16px}
+    header{display:flex;align-items:center;gap:10px;padding:10px 0}
+    .badge{background:var(--accent);color:#fff;border-radius:999px;padding:4px 9px;font-size:12px;font-weight:700}
+    .site-name{font-weight:800;font-size:22px;color:var(--brand)}
+    .tagline{color:#75808a;font-size:14px}
+    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+    h1{font-size:22px;margin:0 0 12px}
+    h2{font-size:20px;margin:0 0 10px;color:var(--brand)}
+    h3{font-size:16px;margin:8px 0 0}
+    .tabs{display:flex;gap:6px;margin-bottom:10px}
+    .tab{padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:#fff;font-weight:600;cursor:pointer}
+    .tab[aria-selected="true"]{border-color:var(--brand);color:#fff;background:var(--brand)}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
+    .chip{border:1px solid var(--border);border-radius:10px;padding:6px 10px;background:#fff;cursor:pointer}
+    .bar{height:8px;background:#f0ece6;border-radius:6px;overflow:hidden}
+    .bar>span{display:block;height:100%;background:var(--brand);width:65%}
+    .rows{display:grid;gap:8px;margin-top:10px}
+    .row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+    .btn{display:inline-block;padding:9px 12px;border:1px solid var(--brand);border-radius:10px;color:var(--brand);background:#fff;font-weight:600}
+    .btn--solid{background:var(--brand);color:#fff;border-color:var(--brand)}
+    .btn--ghost{opacity:.9}
+    .why ul{margin:6px 0 0 18px;padding:0}
+    .why li{margin:6px 0}
+    .adbox{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+    .ad{border:1px dashed var(--border);border-radius:10px;padding:10px;text-align:center;background:#fff}
+    .section{margin-top:16px}
+    .latest-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    @media (max-width:900px){.latest-grid{grid-template-columns:1fr}}
+    .card-img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;border:1px solid var(--border);background:#f6f3ef}
+    footer{color:#7f7a74;font-size:14px;padding:24px 0}
+    .cta-center{text-align:center;margin-top:10px}
 
-{% block content %}
+    /* Affichage conditionnel du bouton PDF */
+    #btnPdf{display:none}
+    body.is-advanced #btnPdf{display:inline-block}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- HEADER -->
+    <header>
+      <a href="/" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none">
+        <span class="badge">Gratuit</span>
+        <span class="site-name">BudgetMariage</span>
+      </a>
+      <span class="tagline">Simulateur instantané</span>
+    </header>
 
-  {% include "simulateur.njk" %}
+    <!-- HERO / SIMULATEUR -->
+    <div class="grid">
+      <!-- Colonne gauche : simulateur -->
+      <section class="card">
+        <div class="tabs" role="tablist" aria-label="Modes du simulateur">
+          <button id="tab-express" class="tab" role="tab" aria-selected="true">Mode express</button>
+          <button id="tab-advanced" class="tab" role="tab" aria-selected="false">Mode avancé</button>
+        </div>
 
-  <section class="intro" style="margin:8px 0 24px;">
-    <div style="border:1px solid #ddd;border-radius:10px;padding:16px;background:#fff;">
-      <!-- DEBUG: si tu lis ceci, index.njk rend bien le contenu -->
-      <div style="font-size:12px;color:#999;margin-bottom:8px;">[DEBUG index]</div>
+        <h1>Calculez votre budget</h1>
 
-      <h2 style="margin:0 0 8px; font-size:18px; color:#2e6b56;">Votre budget de mariage, clair en 30 secondes</h2>
-      <p style="margin:0;">
-        Notre simulateur gratuit propose deux modes : <b>Express</b> (invités, style, région) et
-        <b>Avancé</b> (budget global à répartir par postes). Les estimations s’appuient sur des
-        moyennes en France.
-      </p>
+        <div class="chips">
+          <button class="chip">30</button>
+          <button class="chip">50</button>
+          <button class="chip">80</button>
+          <button class="chip">120</button>
+          <button class="chip">200</button>
+          <button class="chip">Autre…</button>
+        </div>
+
+        <div class="rows">
+          <div class="row"><strong>Budget estimé : 5713 €</strong></div>
+
+          <div class="row"><span>Lieu & Traiteur</span><span>3314 €</span></div>
+          <div class="bar"><span style="width:70%"></span></div>
+
+          <div class="row"><span>Tenues & Alliances</span><span>571 €</span></div>
+          <div class="bar"><span style="width:20%"></span></div>
+
+          <div class="row"><span>Photo / Vidéo</span><span>457 €</span></div>
+          <div class="bar"><span style="width:18%"></span></div>
+
+          <div class="row"><span>Décoration & Fleurs</span><span>400 €</span></div>
+          <div class="bar"><span style="width:16%"></span></div>
+
+          <div class="row"><span>Musique / Animation</span><span>400 €</span></div>
+          <div class="bar"><span style="width:16%"></span></div>
+
+          <div class="row"><span>Divers & imprévus</span><span>571 €</span></div>
+          <div class="bar"><span style="width:20%"></span></div>
+        </div>
+
+        <!-- Les 3 boutons demandés -->
+        <div class="btns">
+          <a class="btn btn--solid" href="#">Outils Premium &amp; Packs</a>
+          <a class="btn" href="#">Partenaires (robes, déco…)</a>
+          <a class="btn btn--ghost" id="btnPdf" href="#">Télécharger le PDF</a> <!-- visible seulement en Avancé -->
+        </div>
+      </section>
+
+      <!-- Colonne droite : Pourquoi + encarts -->
+      <aside class="card why">
+        <h2>Pourquoi ce simulateur&nbsp;?</h2>
+        <ul>
+          <li>Estimation instantanée</li>
+          <li>Répartition par postes</li>
+          <li>Conseils pour économiser</li>
+        </ul>
+
+        <div class="adbox">
+          <div class="ad">
+            <div style="font-weight:700">Robes &amp; tenues</div>
+            <small>Sélection partenaires</small>
+          </div>
+          <div class="ad">
+            <div style="font-weight:700">Décoration</div>
+            <small>Pinterest-friendly</small>
+          </div>
+        </div>
+      </aside>
     </div>
-  </section>
 
-  {% include "home-latest.njk" %}
+    <!-- Intro -->
+    <section class="section card">
+      <h2>Votre budget de mariage, clair en 30 secondes</h2>
+      <p>
+        Notre simulateur gratuit propose deux modes :
+        <b>Express</b> (invités, style, région) et <b>Avancé</b> (budget global à répartir par postes).
+        Les estimations s’appuient sur des moyennes en France.
+      </p>
+    </section>
 
-{% endblock %}
+    <!-- Derniers articles + bouton centré -->
+    <section class="section card">
+      <h2>Guides populaires</h2>
+
+      <div class="latest-grid">
+        <article>
+          <a href="/blog/budget-mariage-100-invites/">
+            <img class="card-img" src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=1200&auto=format&fit=crop" alt="">
+            <h3>Budget mariage : combien prévoir pour 100 invités ?</h3>
+          </a>
+        </article>
+
+        <article>
+          <a href="/blog/guide-robes-2025/">
+            <img class="card-img" src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=1200&auto=format&fit=crop" alt="">
+            <h3>Robes de mariée : notre sélection 2025</h3>
+          </a>
+        </article>
+
+        <article>
+          <a href="/blog/deco-champetre/">
+            <img class="card-img" src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?q=80&w=1200&auto=format&fit=crop" alt="">
+            <h3>Décoration champêtre : idées & budget</h3>
+          </a>
+        </article>
+      </div>
+
+      <div class="cta-center">
+        <a class="btn" href="/blog">Voir tous les articles →</a>
+      </div>
+    </section>
+
+    <footer>
+      © <span id="y"></span> BudgetMariage.com — Outil gratuit
+    </footer>
+  </div>
+
+  <script>
+    // petit switch Express/Avancé pour afficher le bouton PDF
+    const body = document.body;
+    const tabExpress = document.getElementById('tab-express');
+    const tabAdvanced = document.getElementById('tab-advanced');
+
+    function setMode(isAdvanced){
+      body.classList.toggle('is-advanced', isAdvanced);
+      tabExpress.setAttribute('aria-selected', String(!isAdvanced));
+      tabAdvanced.setAttribute('aria-selected', String(isAdvanced));
+    }
+
+    tabExpress.addEventListener('click', () => setMode(false));
+    tabAdvanced.addEventListener('click', () => setMode(true));
+
+    // année footer
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
