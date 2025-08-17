@@ -1,511 +1,174 @@
-<!doctype html>
+---
+layout: base
+title: Accueil
+---
+
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <title>BudgetMariage – Simulateur de budget de mariage (express & avancé)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Calculez gratuitement le budget de votre mariage en 30 secondes. Mode express et avancé, répartition par postes, conseils & outils premium.">
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <meta name="description" content="Simulateur de budget mariage champêtre + derniers articles du blog.">
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
-
-  <!-- Favicons (mets les fichiers à la racine si tu veux remplacer l’emoji) -->
+  <!-- Favicons -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>💍</text></svg>">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-  <!-- AdSense (remplace le client) -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
-
-  <script>
-    /* Redirige les liens d'invitation Netlify Identity vers /admin */
-    if (location.hash && location.hash.includes('invite_token')) {
-      location.href = '/admin/' + location.hash;
-    }
-  </script>
-
-  <style>
-    :root{
-      /* Palette “champêtre” (identique à avant) */
-      --brand:#3e5c49;     /* vert sauge foncé pour boutons/accents */
-      --brand-2:#6f8f7b;   /* vert eucalyptus (dégradés) */
-      --accent:#c99a6d;    /* doré/terracotta doux (barres) */
-      --bg:#f7f5f1;        /* lin clair */
-      --ink:#21312a;
-      --muted:#6f7b74;
-      --card:#ffffff;
-      --line:#e7e2d9;
-      --ring: rgba(62,92,73,.18);
-    }
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,Arial}
-    h1,h2,h3{font-family:"Playfair Display",serif}
-    .container{max-width:1080px;margin:auto;padding:18px 22px}
-    header{display:flex;align-items:center;gap:10px;padding:6px 0; margin-bottom:10px} /* moins d’espace vide */
-    .badge{display:inline-block;font-size:12px;padding:4px 8px;border-radius:999px;background:var(--accent);color:#21190e;font-weight:700}
-    header h1{font-size:22px;margin:0;font-weight:800}
-    header h1 a{color:#d1a55f;text-decoration:none} /* logo texte en “jaune” */
-    header .tagline{margin-left:auto;color:var(--muted);font-size:13px}
-
-    .top-ad{margin:8px 0} /* réduit l’espace */
-    .ad-slot{background:#f2efe9;border:1px dashed #d8cfbf;border-radius:10px;padding:8px;text-align:center;color:#7a7468;font-size:12px}
-
-    .grid{display:grid;gap:16px}
-    @media(min-width:1000px){.grid{grid-template-columns:1.2fr .8fr}}
-
-    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 10px 26px rgba(62,92,73,.06)}
-    .section-title{font-weight:800;margin:6px 0 10px;color:var(--brand)}
-    .muted{color:var(--muted);font-size:13px}
-
-    .pillrow{display:flex;gap:8px;flex-wrap:wrap}
-    .pillrow button{border:1px solid var(--line);background:#fff;padding:8px 12px;border-radius:999px;cursor:pointer;font-weight:600}
-    .pillrow button.active{border-color:var(--brand);box-shadow:0 0 0 2px var(--ring)}
-
-    .selectwrap{background:#f3f1ed;border:1px solid #e5ded3;padding:10px;border-radius:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-    select,input[type=number]{border:1px solid #d7d0c5;border-radius:10px;padding:9px 10px;min-width:160px;background:#fff}
-
-    .cta{background:linear-gradient(90deg,var(--brand),var(--brand-2));color:#fff;border:none;border-radius:10px;padding:12px 16px;font-weight:700;cursor:pointer;box-shadow:0 3px 14px var(--ring)}
-    .cta-ghost{border:1px solid var(--brand);background:#fff;color:var(--brand);border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer;box-shadow:0 2px 10px var(--ring)}
-
-    .result{font-size:34px;font-weight:900}
-    .row{display:flex;justify-content:space-between;margin:6px 0}
-    .bar{height:8px;border-radius:6px;background:#efe8db;overflow:hidden}        /* fond beige */
-    .bar > span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#dfbb8e)} /* remplissage doré */
-
-    .sidebar-sticky{position:sticky;top:18px;display:grid;gap:12px}
-    .why li{margin:6px 0}
-
-    .inline-ad{margin:10px 0}
-    .cta-grid{display:grid;gap:10px;margin-top:10px}
-    @media(min-width:600px){.cta-grid{grid-template-columns:1fr 1fr}}
-    .cta-premium{background:linear-gradient(90deg,var(--accent),#e9c8a6);color:#2d261b;border:none;border-radius:12px;padding:14px 18px;font-weight:800;cursor:pointer;box-shadow:0 3px 14px var(--ring)}
-
-    .partner-grid{display:grid;gap:10px;margin-top:10px}
-    @media(min-width:700px){.partner-grid{grid-template-columns:1fr 1fr}}
-    .partner{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff}
-    .partner img{width:56px;height:56px;border-radius:8px;object-fit:cover}
-
-    .three-grid{display:grid;gap:12px}
-    @media(min-width:900px){.three-grid{grid-template-columns:repeat(3,1fr)}}
-    .card-link{display:block;border:1px solid var(--line);border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;background:#fff}
-    .card-link img{width:100%;height:140px;object-fit:cover}
-    .card-link h3{font-size:16px;margin:10px 12px;color:var(--brand)}
-
-    footer{padding:20px 0;color:var(--muted);font-size:13px}
-
-    /* Tabs */
-    .mode-tabs{display:flex;gap:8px;margin-top:8px}
-    .mode-tabs button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 10px;cursor:pointer}
-    .mode-tabs button.active{background:var(--brand);color:#fff;border-color:var(--brand)}
-
-    .slider-row{display:flex;align-items:center;gap:10px;margin:6px 0}
-    .slider-row input[type=range]{flex:1}
-
-    /* ---- BLOG preview ---- */
-    .blog-preview{margin-top:20px}
-    .posts-top{text-align:center;margin:0 0 12px}
-    .posts-top .btn{display:inline-block;background:var(--brand);color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:700;box-shadow:0 2px 10px var(--ring)}
-    .posts-grid{display:grid;gap:16px}
-    @media(min-width:900px){.posts-grid{grid-template-columns:repeat(3,1fr)}}
-    .post-card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column}
-    .post-card img{width:100%;height:140px;object-fit:cover}
-    .post-card h3{font-size:16px;margin:10px 12px;color:var(--brand)}
-    .post-card p{font-size:14px;color:var(--muted);margin:0 12px 12px}
-  </style>
-
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"WebPage","name":"Budget de mariage – simulateur","description":"Calculez gratuitement le budget de votre mariage : express ou avancé, répartition par postes, outils premium.","url":"https://budgetmariage.com/"}
-  </script>
+  <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
-  <canvas id="confetti"></canvas>
-  <div class="container">
-    <header>
-      <span class="badge">Gratuit</span>
-      <!-- Logo texte CLIQUABLE -->
-      <h1><a href="/" aria-label="Retour à l’accueil">BudgetMariage</a></h1>
-      <span class="tagline">Simulateur instantané</span>
-    </header>
 
-    <!-- AD #Top banner (ADSENSE) -->
-    <div class="top-ad">
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-           data-ad-slot="1111111111"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-      <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
-      <div class="ad-slot" id="ad-fallback-top" style="display:none">Emplacement pub (Top banner)</div>
+<header>
+  <h1>Mon Mariage Champêtre</h1>
+</header>
+
+<main>
+
+  <!-- Simulateur -->
+  <section class="simulateur card">
+    <h2>Simulateur de budget mariage</h2>
+
+    <!-- Onglets Express / Avancé -->
+    <div class="tabs">
+      <button id="modeExpress" class="active">Mode Express</button>
+      <button id="modeAvance">Mode Avancé</button>
     </div>
 
-    <div class="grid">
-      <!-- LEFT -->
-      <section class="card">
-        <h2 class="section-title">Calculez votre budget</h2>
-        <div class="mode-tabs">
-          <button id="modeExpress" class="active">Mode express</button>
-          <button id="modeAvance">Mode avancé</button>
-        </div>
+    <!-- EXPRESS -->
+    <div id="express">
+      <label>Nombre d'invités</label>
+      <div id="guestsPills" class="pills">
+        <button type="button" data-val="50">50</button>
+        <button type="button" data-val="100">100</button>
+        <button type="button" data-val="150">150</button>
+        <button type="button" data-val="custom">Autre…</button>
+      </div>
+      <input id="guestsInput" type="number" min="10" max="500" value="50" style="display:none">
 
-        <!-- EXPRESS -->
-        <div id="express">
-          <div class="pillrow" id="guestsPills" style="margin-top:8px">
-            <span class="pill"><button data-val="30">30</button></span>
-            <span class="pill"><button data-val="50" class="active">50</button></span>
-            <span class="pill"><button data-val="80">80</button></span>
-            <span class="pill"><button data-val="120">120</button></span>
-            <span class="pill"><button data-val="200">200</button></span>
-            <span class="pill"><button data-val="custom">Autre…</button></span>
-            <input id="guestsInput" type="number" min="5" max="500" value="50" style="width:96px;display:none">
-          </div>
-
-          <div class="selectwrap" style="margin-top:10px">
-            <label>Style</label>
-            <select id="style">
-              <option value="petit">Petit budget</option>
-              <option value="standard" selected>Standard</option>
-              <option value="chic">Chic</option>
-            </select>
-            <label>Région</label>
-            <select id="region">
-              <option value="idf">Île-de-France</option>
-              <option value="paca">Provence-Alpes-Côte d'Azur</option>
-              <option value="ara">Auvergne-Rhône-Alpes</option>
-              <option value="na">Nouvelle-Aquitaine</option>
-              <option value="occ">Occitanie</option>
-              <option value="pdl">Pays de la Loire</option>
-              <option value="bre">Bretagne</option>
-              <option value="nor">Normandie</option>
-              <option value="hdf">Hauts-de-France</option>
-              <option value="ge">Grand Est</option>
-              <option value="cvl">Centre-Val de Loire</option>
-              <option value="bfc">Bourgogne-Franche-Comté</option>
-              <option value="cor">Corse</option>
-              <option value="gua">Guadeloupe</option>
-              <option value="mar">Martinique</option>
-              <option value="guy">Guyane</option>
-              <option value="reu">La Réunion</option>
-              <option value="may">Mayotte</option>
-              <option value="province" selected>Province (moyenne)</option>
-            </select>
-            <label>Imprévus (%)</label>
-            <select id="buffer">
-              <option value="0">0%</option>
-              <option value="5">5%</option>
-              <option value="10" selected>10%</option>
-              <option value="15">15%</option>
-            </select>
-          </div>
-
-          <div style="display:flex;gap:10px;align-items:center;margin-top:14px">
-            <button class="cta" id="calcBtn">Calculer</button>
-            <span class="muted">Estimation indicative basée sur moyennes FR.</span>
-          </div>
-
-          <!-- AD inline -->
-          <div class="inline-ad" style="margin-top:10px">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                 data-ad-slot="2222222222"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
-            <div class="ad-slot" id="ad-fallback-inline" style="display:none">Emplacement pub (inline)</div>
-          </div>
-
-          <hr style="margin:14px 0;border:none;border-top:1px solid var(--line)">
-
-          <div id="out" style="display:none">
-            <div class="muted">Budget estimé</div>
-            <div class="result" id="total">€</div>
-            <div id="breakdown"></div>
-            <!-- EXPRESS : 2 boutons -->
-            <div class="cta-grid" id="ctaExpress">
-              <a class="cta-premium" href="/packs.html">Outils Premium & Packs (checklists, modèles)</a>
-              <a class="cta-ghost" href="/affiliations.html">Sélection partenaires : robes, déco, faire-part →</a>
-            </div>
-            <div class="muted" style="margin-top:6px">* Liens partenaires possibles.</div>
-          </div>
-        </div>
-
-        <!-- AVANCÉ -->
-        <div id="avance" style="display:none;margin-top:8px">
-          <div class="selectwrap">
-            <label>Budget total (€)</label>
-            <input id="totalBudgetInput" type="number" min="0" value="15000">
-            <label>Invités</label>
-            <input id="totalGuestsInput" type="number" min="5" value="100" style="width:120px">
-          </div>
-
-          <p class="muted" style="margin:8px 0">Ajustez la répartition par poste :</p>
-          <div id="sliders"></div>
-          <div style="display:flex;gap:10px;margin-top:8px">
-            <button class="cta" id="applySplit">Appliquer</button>
-            <button class="cta-ghost" id="resetSplit">Réinitialiser</button>
-          </div>
-
-          <hr style="margin:14px 0;border:none;border-top:1px solid var(--line)">
-
-          <div id="outAdvanced" style="display:none">
-            <div class="muted">Budget total</div>
-            <div class="result" id="totalAdv">€</div>
-            <div id="breakdownAdv"></div>
-            <!-- AVANCÉ : 3 boutons (PDF en plus) -->
-            <div class="cta-grid" id="ctaAvance">
-              <a class="cta-premium" href="/packs.html">Outils Premium & Packs</a>
-              <a class="cta-ghost" href="/affiliations.html">Sélection partenaires : robes, déco, faire-part →</a>
-              <a class="cta" href="/checklist.pdf" download>Télécharger la checklist PDF</a>
-            </div>
-            <div class="muted" style="margin-top:6px">* Liens partenaires possibles.</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- RIGHT -->
-      <aside class="sidebar-sticky">
-        <!-- AD #sidebar -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-             data-ad-slot="3333333333"
-             data-ad-format="rectangle"
-             data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
-        <div class="ad-slot" id="ad-fallback-side" style="display:none">Emplacement pub (sidebar sticky)</div>
-
-        <section class="card why" style="padding-bottom:10px">
-          <h3 class="section-title" style="margin-bottom:4px">Pourquoi ce simulateur ?</h3>
-          <ul style="margin:0 0 8px 18px">
-            <li>Estimation instantanée</li>
-            <li>Répartition par postes</li>
-            <li>Conseils pour économiser</li>
-          </ul>
-          <div class="partner-grid">
-            <div class="partner">
-              <img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=400" alt="">
-              <div><strong>Robes & tenues</strong><div class="muted">Sélection partenaires</div></div>
-            </div>
-            <div class="partner">
-              <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=400" alt="">
-              <div><strong>Décoration</strong><div class="muted">Pinterest-friendly</div></div>
-            </div>
-          </div>
-          <div class="muted" style="margin-top:6px;font-size:12px">* Liens d’affiliation possibles.</div>
-        </section>
-      </aside>
+      <div class="progress-bars">
+        <!-- tes barres d’avancement existantes ici -->
+      </div>
     </div>
 
-    <!-- SEO copy enrichie -->
-    <section class="card" style="margin-top:14px">
-      <h2 class="section-title">Votre budget de mariage, clair en 30&nbsp;secondes</h2>
-      <p>
-        Notre simulateur gratuit propose deux modes : <strong>Express</strong> (invités, style, région) et
-        <strong>Avancé</strong> (budget global à répartir par poste). Les estimations s’appuient sur des moyennes
-        en France et vous aident à prioriser : lieu & traiteur, tenues & alliances, photo/vidéo,
-        décoration & fleurs, musique/animation, divers & imprévus. Servez-vous-en comme base puis
-        affinez avec des devis locaux.
-      </p>
-      <p>
-        Gagnez du temps avec nos <strong>Outils Premium & Packs</strong> (checklists, modèles de budget,
-        rétroplanning) et notre <strong>sélection de partenaires</strong> pour les achats utiles
-        (faire-parts, impression photo, déco, robes…). Objectif : arbitrer sereinement, économiser où
-        c’est possible, et investir là où l’impact est le plus visible le jour J.
-      </p>
-    </section>
-
-    <!-- 3 cartes guides populaires -->
-    <section class="card" style="margin-top:14px">
-      <h2 class="section-title">Guides populaires</h2>
-      <div class="three-grid">
-        <a class="card-link" href="/budget-mariage-50-invites/">
-          <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=800" alt="">
-          <h3>Budget mariage 50 invités</h3>
-        </a>
-        <a class="card-link" href="/budget-mariage-100-invites/">
-          <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=800" alt="">
-          <h3>Budget mariage 100 invités</h3>
-        </a>
-        <a class="card-link" href="/budget-mariage-petit-prix/">
-          <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=800" alt="">
-          <h3>Mariage petit budget : le guide</h3>
-        </a>
+    <!-- AVANCÉ -->
+    <div id="avance" style="display:none">
+      <p>Réglages détaillés du budget mariage…</p>
+      <div class="progress-bars">
+        <!-- barres avancées -->
       </div>
-    </section>
+    </div>
 
-    <!-- 🔥 Derniers articles (bouton CENTRÉ AU-DESSUS + 3 cartes) -->
-    <section class="card blog-preview">
-      <h2 class="section-title">Derniers articles du blog</h2>
-      <div class="posts-top">
-        <a href="/blog/" class="btn">Voir tous les articles</a>
-      </div>
-      <div class="posts-grid">
-        {% for post in collections.posts | reverse | slice(0,3) %}
-          <a class="post-card" href="{{ post.url }}">
-            {% if post.data.cover %}
-              <img src="{{ post.data.cover }}" alt="{{ post.data.title }}">
-            {% endif %}
-            <h3>{{ post.data.title }}</h3>
-            <p>{{ post.data.excerpt | safe }}</p>
-          </a>
-        {% endfor %}
-      </div>
-    </section>
+    <!-- CTA EXPRESS -->
+    <div id="ctaExpress" style="display:none; gap:.6rem; margin-top:.6rem">
+      <a class="btn btn-premium" href="/packs.html">Outils Premium &amp; Packs (checklists, modèles)</a>
+      <a class="btn btn-ghost" href="/affiliations.html">Sélection partenaires : robes, déco, faire-part →</a>
+    </div>
 
-    <footer>© <span id="y"></span> BudgetMariage.com — Outil gratuit</footer>
-  </div>
+    <!-- CTA AVANCÉ -->
+    <div id="ctaAvance" style="display:none; gap:.6rem; margin-top:.6rem">
+      <a class="btn btn-premium" href="/packs.html">Outils Premium &amp; Packs</a>
+      <a class="btn btn-ghost" href="/affiliations.html">Sélection partenaires : robes, déco, faire-part →</a>
+      <a class="btn btn-primary" href="/checklist.pdf" download>Télécharger la checklist PDF</a>
+    </div>
+  </section>
 
-  <script>
-    // année
-    document.getElementById('y').textContent = new Date().getFullYear();
+  <!-- SEO texte -->
+  <section class="seo-text">
+    <h2>Préparer son mariage avec sérénité</h2>
+    <p>Notre simulateur champêtre vous permet d’estimer votre budget en quelques clics, selon vos envies et le nombre d’invités. Que vous soyez dans une organisation rapide (mode Express) ou un suivi détaillé (mode Avancé), vous disposez d’outils pratiques et de partenaires de confiance.</p>
+    <p>Découvrez également nos checklists, modèles, et ressources premium pour ne rien oublier le jour J. Mariage bohème, chic, intime ou grandiose : adaptez votre budget en toute simplicité.</p>
+  </section>
 
-    // Fallback pub si AdSense n’affiche rien
-    function adFallback(id){ const el=document.getElementById(id); if(el) el.style.display='block'; }
-    setTimeout(()=>{ adFallback('ad-fallback-top'); adFallback('ad-fallback-inline'); adFallback('ad-fallback-side'); }, 2000);
+  <!-- Derniers articles -->
+  <section class="card blog-preview">
+    <h2 class="section-title">Derniers articles du blog</h2>
 
-    // ----- Mode EXPRESS
-    const pills = document.querySelectorAll('#guestsPills button');
-    const guestsInput = document.getElementById('guestsInput');
-    pills.forEach(b=>b.addEventListener('click',()=>{
-      pills.forEach(x=>x.classList.remove('active'));
-      b.classList.add('active');
-      const v = b.dataset.val;
-      if(v==='custom'){ guestsInput.style.display='inline-block'; guestsInput.focus(); }
-      else { guestsInput.style.display='none'; guestsInput.value=v; }
-    }));
-    if (!guestsInput.value) guestsInput.value = 50;
+    <div style="text-align:center; margin: .5rem 0 1rem">
+      <a href="/blog/" class="btn btn-primary">Voir tous les articles</a>
+    </div>
 
-    const styleSel = document.getElementById('style');
-    const regionSel = document.getElementById('region');
-    const bufferSel = document.getElementById('buffer');
-    const out = document.getElementById('out');
-    const totalEl = document.getElementById('total');
-    const breakdown = document.getElementById('breakdown');
+    <div class="posts-grid">
+      {% for post in collections.posts | reverse | slice(0,3) %}
+        <a class="post-card" href="{{ post.url }}">
+          {% if post.data.cover %}
+            <img src="{{ post.data.cover }}" alt="{{ post.data.title }}">
+          {% endif %}
+          <h3>{{ post.data.title }}</h3>
+          <p>{{ post.data.excerpt | safe }}</p>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
 
-    // Multiplicateurs région
-    const REGION_MULT = {
-      province:1.00, idf:1.20, paca:1.15, ara:1.10, na:1.02, occ:1.00, pdl:0.99, bre:0.98,
-      nor:0.98, hdf:0.95, ge:0.98, cvl:0.98, bfc:0.97, cor:1.15,
-      gua:1.10, mar:1.10, guy:1.08, reu:1.12, may:1.10
-    };
+</main>
 
-    function euros(n){return n.toLocaleString('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0});}
+<footer>
+  <p>&copy; 2025 Mon Mariage Champêtre</p>
+</footer>
 
-    function calcExpress(){
-      const guests = Math.max(5, Math.min(500, parseInt(guestsInput.value||50,10)));
-      const style = styleSel.value; const region = regionSel.value; const buffer = parseInt(bufferSel.value,10)/100;
-      let perGuest = 70; if(style==='petit') perGuest*=0.75; if(style==='chic') perGuest*=1.5;
-      const regionMult = REGION_MULT[region] ?? 1.0;
-      const fixed = 1800 * (style==='chic'?1.4:(style==='petit'?0.8:1));
-      let base = (perGuest*guests*regionMult) + (fixed*regionMult);
-      base *= (1+buffer);
+<style>
+  .blog-preview{margin-top:1rem}
+  .posts-grid{display:grid;gap:1rem}
+  @media(min-width:900px){.posts-grid{grid-template-columns:repeat(3,1fr)}}
+  .post-card{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line, #e7e2d9);border-radius:12px;overflow:hidden;text-decoration:none;color:inherit}
+  .post-card img{width:100%;height:150px;object-fit:cover}
+  .post-card h3{font-size:1rem;margin:.6rem .75rem;color:var(--brand, #3e5c49)}
+  .post-card p{font-size:.9rem;color:var(--muted, #6f7b74);margin:0 .75rem .8rem}
+</style>
 
-      const parts = [
-        ['Lieu & Traiteur', 0.58],
-        ['Tenues & Alliances', 0.10],
-        ['Photo / Vidéo', 0.08],
-        ['Décoration & Fleurs', 0.07],
-        ['Musique / Animation', 0.07],
-        ['Divers & Imprévus', 0.10],
-      ];
-      out.style.display = 'block';
-      totalEl.textContent = euros(base);
-      breakdown.innerHTML = parts.map(([label,ratio])=>{
-        const val = base*ratio;
-        return `<div class="row"><span>${label}</span><strong>${euros(val)}</strong></div>
-                <div class="bar"><span style="width:${Math.round(ratio*100)}%"></span></div>`;
-      }).join('');
-      confettiBurst();
+<script>
+(function(){
+  var logo = document.querySelector('header h1');
+  if(logo && logo.tagName!=='A'){
+    logo.style.cursor='pointer';
+    logo.addEventListener('click', function(){ location.href='/' });
+  }
+})();
+
+// Pills invités
+const pillsWrap = document.querySelector('#guestsPills');
+const guestsField = document.querySelector('#guestsInput');
+if (pillsWrap && guestsField) {
+  pillsWrap.addEventListener('click', function(e){
+    const b = e.target.closest('button[data-val]');
+    if(!b) return;
+    pillsWrap.querySelectorAll('button[data-val]').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    const v = b.dataset.val;
+    if(v==='custom'){
+      guestsField.style.display='inline-block';
+      guestsField.focus();
+    }else{
+      guestsField.style.display='none';
+      guestsField.value = v;
     }
-    document.getElementById('calcBtn').addEventListener('click',calcExpress);
+  });
+  if(!guestsField.value) guestsField.value = 50;
+}
 
-    // ----- Mode AVANCÉ
-    const defaultSplit = [
-      ['Réception (lieu, cérémonie, matériel)', 35],
-      ['Restauration (vin d’honneur, repas, boissons)', 30],
-      ['Les Mariés (tenues, beauté, alliances)', 10],
-      ['Musique & Animation', 5],
-      ['Cadeaux (invités, famille, témoins)', 3],
-      ['Fleurs & Décoration', 4],
-      ['Papeterie (faire-part, menus, marque-place)', 2],
-      ['Frais administratifs (mairie, église…)', 1],
-      ['Photographie / Vidéo', 4],
-      ['Planification (organisateur)', 0],
-      ['Transport / Hébergement', 2],
-      ['Voyage de noces', 2],
-      ['Divers & Imprévus', 2],
-    ];
-    const slidersBox = document.getElementById('sliders');
-    const totalBudgetInput = document.getElementById('totalBudgetInput');
-    const outAdv = document.getElementById('outAdvanced');
-    const totalAdv = document.getElementById('totalAdv');
-    const breakdownAdv = document.getElementById('breakdownAdv');
+// Switch Express / Avancé
+const modeExpressBtn = document.getElementById('modeExpress');
+const modeAvanceBtn  = document.getElementById('modeAvance');
+const boxExpress     = document.getElementById('express');
+const boxAvance      = document.getElementById('avance');
+const ctaExpress     = document.getElementById('ctaExpress');
+const ctaAvance      = document.getElementById('ctaAvance');
 
-    function renderSliders(split=defaultSplit){
-      slidersBox.innerHTML = split.map(([label, pct],i)=>`
-        <div class="slider-row">
-          <span style="min-width:220px">${label}</span>
-          <input type="range" min="0" max="60" value="${pct}" data-i="${i}">
-          <strong style="width:44px;text-align:right"><span class="pct">${pct}</span>%</strong>
-        </div>
-      `).join('');
-      slidersBox.querySelectorAll('input[type=range]').forEach(r=>{
-        r.addEventListener('input',()=>{ r.parentElement.querySelector('.pct').textContent = r.value; });
-      });
-    }
-    renderSliders();
+function setMode(which){
+  const isExpress = which==='express';
+  if(modeExpressBtn) modeExpressBtn.classList.toggle('active', isExpress);
+  if(modeAvanceBtn)  modeAvanceBtn.classList.toggle('active', !isExpress);
+  if(boxExpress)  boxExpress.style.display = isExpress ? '' : 'none';
+  if(boxAvance)   boxAvance.style.display  = isExpress ? 'none' : '';
+  if(ctaExpress)  ctaExpress.style.display = isExpress ? 'grid' : 'none';
+  if(ctaAvance)   ctaAvance.style.display  = isExpress ? 'none' : 'grid';
+}
+if(modeExpressBtn) modeExpressBtn.addEventListener('click', ()=>setMode('express'));
+if(modeAvanceBtn)  modeAvanceBtn .addEventListener('click', ()=>setMode('avance'));
+setMode('express');
+</script>
 
-    document.getElementById('applySplit').addEventListener('click',()=>{
-      const total = parseFloat(totalBudgetInput.value||0);
-      const sliders = [...slidersBox.querySelectorAll('input[type=range]')].map(r=>[r.parentElement.firstElementChild.textContent, parseInt(r.value,10)]);
-      const sum = sliders.reduce((s,[_l,p])=>s+p,0);
-      if(sum===0){ outAdv.style.display='none'; return; }
-      outAdv.style.display='block';
-      totalAdv.textContent = euros(total);
-      breakdownAdv.innerHTML = sliders.map(([label,pct])=>{
-        const val = total * (pct/100);
-        return `<div class="row"><span>${label}</span><strong>${euros(val)}</strong></div>
-                <div class="bar"><span style="width:${pct}%"></span></div>`;
-      }).join('');
-      confettiBurst();
-    });
-    document.getElementById('resetSplit').addEventListener('click',()=>renderSliders(defaultSplit));
-
-    // Switch modes + gestion des CTA (2 en Express, 3 en Avancé)
-    const expressBox = document.getElementById('express');
-    const avanceBox = document.getElementById('avance');
-    const btnExpress = document.getElementById('modeExpress');
-    const btnAvance = document.getElementById('modeAvance');
-    const ctaExpress = document.getElementById('ctaExpress');
-    const ctaAvance  = document.getElementById('ctaAvance');
-
-    function setMode(mode){
-      const isExpress = mode==='express';
-      btnExpress.classList.toggle('active', isExpress);
-      btnAvance.classList.toggle('active', !isExpress);
-      expressBox.style.display = isExpress ? 'block' : 'none';
-      avanceBox.style.display  = isExpress ? 'none'  : 'block';
-    }
-    btnExpress.addEventListener('click',()=>setMode('express'));
-    btnAvance .addEventListener('click',()=>setMode('avance'));
-    setMode('express'); // par défaut
-
-    // Confetti minimal (dopamine)
-    const c = document.getElementById('confetti'); const ctx = c.getContext('2d');
-    let confs = []; function resize(){c.width=innerWidth; c.height=innerHeight;} resize(); addEventListener('resize',resize);
-    function confettiBurst(){
-      const colors=['#c99a6d','#e7cdb0','#93b09f','#3e5c49'];
-      for(let i=0;i<60;i++){
-        confs.push({x:innerWidth/2,y:120, vx:(Math.random()-0.5)*6, vy:(Math.random()*-6)-2, r:Math.random()*3+2, col:colors[Math.floor(Math.random()*colors.length)], life:80});
-      }
-    }
-    (function anim(){ requestAnimationFrame(anim); ctx.clearRect(0,0,c.width,c.height);
-      confs = confs.filter(p=>p.life>0);
-      confs.forEach(p=>{ p.life--; p.vy+=0.15; p.x+=p.vx; p.y+=p.vy; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.28); ctx.fillStyle=p.col; ctx.fill();});
-    })();
-  </script>
 </body>
 </html>
