@@ -1,0 +1,31 @@
+---
+layout: page.njk
+---
+
+<article class="prose">
+  {% if cover %}
+    <img src="{{ cover | url }}" alt="" style="width:100%;border-radius:14px;margin:0 0 12px 0">
+  {% endif %}
+
+  <p style="color:var(--muted);margin:0 0 12px 0">
+    Publié le {{ date | date('dd MMMM yyyy') }}
+  </p>
+
+  {{ content | safe }}
+
+  <hr style="border:none;border-top:1px solid var(--line);margin:18px 0">
+
+  <p style="color:var(--muted)">Vous avez aimé cet article ? Partagez-le 💌</p>
+</article>
+
+{# JSON-LD Article pour SEO #}
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Article",
+  "headline": "{{ seo_title or title | escape }}",
+  "datePublished": "{{ date | date('yyyy-MM-dd') }}",
+  "image": [{% if cover %}"{{ cover | url }}"{% else %}"{{ '/static/og-default.jpg' | url }}"{% endif %}],
+  "mainEntityOfPage":"{{ site.siteUrl }}{{ page.url }}"
+}
+</script>
