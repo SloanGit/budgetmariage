@@ -6,7 +6,7 @@ media_folder: "static/uploads"
 public_folder: "/static/uploads"
 
 collections:
-  # Pages "budget" (tu as déjà)
+  # (Tu gardes ta collection budgets si tu l'utilises)
   - name: "budgets"
     label: "Pages Budget"
     folder: "content/budgets"
@@ -23,7 +23,7 @@ collections:
       - { name: "layout", label: "Layout", widget: "hidden", default: "budget.njk" }
       - { name: "body", label: "Contenu", widget: "markdown" }
 
-  # Nouvelles pages "site" (FAQ, À propos, Contact, Mentions…)
+  # ✅ Collection unique pour toutes les pages du site (FAQ, À propos, Contact, Mentions, etc.)
   - name: "pages"
     label: "Pages"
     folder: "content/pages"
@@ -33,8 +33,8 @@ collections:
     preview_path: "{{slug}}/"
     fields:
       - { name: "title", label: "Titre (H1)", widget: "string" }
-      - { name: "seo_title", label: "SEO Title", widget: "string" }
-      - { name: "seo_desc", label: "Meta Description", widget: "string" }
+      - { name: "seo_title", label: "SEO Title", widget: "string", required: false }
+      - { name: "seo_desc", label: "Meta Description", widget: "string", required: false }
       - { name: "permalink", label: "Permalink (ex: faq/index.html)", widget: "string" }
       - label: "Type de page"
         name: "layout"
@@ -43,5 +43,4 @@ collections:
         options:
           - { label: "Page standard", value: "page.njk" }
           - { label: "Page contact (formulaire)", value: "contact.njk" }
-          - { label: "Mentions légales", value: "page.njk" }
       - { name: "body", label: "Contenu", widget: "markdown" }
