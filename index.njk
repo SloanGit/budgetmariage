@@ -1,174 +1,304 @@
----
-layout: base
-title: Accueil
----
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>{{ title }}</title>
-  <meta name="description" content="Simulateur de budget mariage champêtre + derniers articles du blog.">
+  <meta charset="utf-8">
+  <title>BudgetMariage – Simulateur de budget de mariage (express & avancé)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Calculez gratuitement le budget de votre mariage en 30 secondes. Mode express et avancé, répartition par postes, conseils & outils premium.">
 
-  <!-- Favicons -->
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
+
+  <!-- Favicon (anneau) -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>💍</text></svg>">
-  <link rel="icon" href="/favicon.ico" sizes="any">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-  <link rel="stylesheet" href="/assets/css/style.css">
+  <!-- Redirection Netlify CMS si #invite_token -->
+  <script>
+    if (location.hash && location.hash.includes('invite_token')) {
+      location.href = '/admin/' + location.hash;
+    }
+  </script>
+
+  <style>
+    :root{
+      --bg:#fbf9f4;         /* fond crème champêtre */
+      --card:#fff;
+      --text:#2a2f2c;
+      --muted:#6c776f;
+      --brand:#2f6b52;      /* vert foncé boutons/links */
+      --brand-weak:#e8f0eb; /* léger */
+      --gold:#c08a3b;       /* badge “Gratuit” */
+      --line:#e7e2d9;       /* traits */
+      --pill:#efe8db;       /* puces/pills */
+      --bar:#caa77a;        /* barre BG */
+      --bar-fill:#2f6b52;   /* barre fill (vert) */
+      --radius:14px;
+      --shadow:0 6px 24px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.04);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font:16px/1.6 "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif}
+
+    /* Container global resserré + pas d’espace blanc en haut */
+    .container{max-width:1000px;margin:0 auto;padding:12px 16px 40px}
+
+    /* Header compact */
+    .site-top{display:flex;align-items:center;gap:10px;padding:8px 0}
+    .badge{background:var(--pill);color:#6b4a1f;border-radius:999px;padding:4px 8px;font-weight:700;font-size:12px}
+    .logo{font-family:"Playfair Display", serif;font-weight:800;font-size:26px;letter-spacing:.2px;margin-left:6px}
+    .logo a{color:var(--brand);text-decoration:none}
+    .tagline{margin-left:auto;color:var(--muted);font-size:13px}
+
+    /* Cartes */
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .section{padding:18px}
+    .section-title{font-family:"Playfair Display",serif;font-size:28px;margin:0 0 14px}
+
+    /* Grille simulateur (gauche form + droite arguments) */
+    .grid-2{display:grid;gap:18px}
+    @media(min-width:980px){.grid-2{grid-template-columns:1.25fr .85fr}}
+
+    /* Panneau simulateur */
+    .panel{padding:16px 16px 12px}
+    .panel h2{font-family:"Playfair Display",serif;font-size:22px;margin:0 0 10px}
+
+    /* Pills nombres d’invités */
+    .pills{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
+    .pill{background:var(--pill);border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-weight:600;font-size:13px;cursor:pointer}
+    .pill:hover{background:#e6ddcc}
+
+    /* Select + champs */
+    .row{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+    .field{flex:1;min-width:160px}
+    label{display:block;font-size:13px;color:var(--muted);margin:0 0 6px}
+    select,input[type="number"]{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+
+    /* Boutons */
+    .btn{display:inline-block;background:var(--brand);color:#fff;border:none;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;text-decoration:none}
+    .btn.secondary{background:#fff;color:var(--brand);border:1px solid var(--brand)}
+    .btn.ghost{background:transparent;color:var(--brand);border:1px solid var(--line)}
+    .btn-group{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+
+    /* Résumé + barres */
+    .sum{font-size:28px;font-weight:800;margin:8px 0 4px}
+    .bar{height:10px;border-radius:8px;background:var(--bar);overflow:hidden}
+    .bar > span{display:block;height:100%;background:var(--bar-fill);width:60%}
+
+    /* Encarts arguments droite */
+    .tiles{display:grid;gap:10px}
+    .tile{border:1px dashed var(--line);border-radius:12px;padding:12px;background:#fff}
+    .tile h4{margin:0 0 6px;font-size:15px}
+    .tile ul{margin:0;padding-left:18px;color:var(--muted);font-size:14px}
+
+    /* Guides populaires */
+    .guides{margin-top:18px}
+    .three{display:grid;gap:16px}
+    @media(min-width:900px){.three{grid-template-columns:repeat(3,1fr)}}
+    .guide-card{display:block;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;box-shadow:var(--shadow)}
+    .guide-card img{width:100%;height:160px;object-fit:cover}
+    .guide-card h3{font-size:18px;margin:10px 12px;color:var(--brand)}
+
+    .center{display:flex;justify-content:center}
+    hr.sep{border:0;border-top:1px solid var(--line);margin:20px 0}
+
+    footer{color:var(--muted);font-size:13px;margin-top:26px}
+  </style>
 </head>
 <body>
-
-<header>
-  <h1>Mon Mariage Champêtre</h1>
-</header>
-
-<main>
-
-  <!-- Simulateur -->
-  <section class="simulateur card">
-    <h2>Simulateur de budget mariage</h2>
-
-    <!-- Onglets Express / Avancé -->
-    <div class="tabs">
-      <button id="modeExpress" class="active">Mode Express</button>
-      <button id="modeAvance">Mode Avancé</button>
+  <div class="container">
+    <!-- Header compact sans scroll initial -->
+    <div class="site-top">
+      <span class="badge">Gratuit</span>
+      <div class="logo"><a href="/">BudgetMariage</a></div>
+      <div class="tagline">Simulateur instantané</div>
     </div>
 
-    <!-- EXPRESS -->
-    <div id="express">
-      <label>Nombre d'invités</label>
-      <div id="guestsPills" class="pills">
-        <button type="button" data-val="50">50</button>
-        <button type="button" data-val="100">100</button>
-        <button type="button" data-val="150">150</button>
-        <button type="button" data-val="custom">Autre…</button>
+    <!-- SIMULATEUR -->
+    <div class="card">
+      <div class="section">
+        <div class="grid-2">
+          <!-- Colonne gauche : paramètres -->
+          <div>
+            <div class="panel">
+              <h2>Calculez votre budget</h2>
+
+              <div class="pills" id="invitesPills">
+                <button class="pill" data-n="30">30</button>
+                <button class="pill" data-n="50">50</button>
+                <button class="pill" data-n="80">80</button>
+                <button class="pill" data-n="120">120</button>
+                <button class="pill" data-n="200">200</button>
+                <button class="pill" data-n="0">Autre…</button>
+              </div>
+
+              <div class="row">
+                <div class="field">
+                  <label>Style</label>
+                  <select id="style">
+                    <option>Standard</option>
+                    <option>Élégant</option>
+                    <option>Champêtre</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Région</label>
+                  <select id="region">
+                    <option>Île-de-France</option>
+                    <option>Bretagne</option>
+                    <option>Provence</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Imprévus (%)</label>
+                  <select id="imprevus">
+                    <option>5%</option>
+                    <option selected>10%</option>
+                    <option>15%</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="btn-group">
+                <button class="btn" id="btnCalculer">Calculer</button>
+                <a class="btn ghost" href="#avance">Mode avancé</a>
+              </div>
+
+              <hr class="sep">
+
+              <!-- Résumé -->
+              <div>
+                <div class="sum" id="total">5 713 €</div>
+                <div style="color:var(--muted);font-size:13px;margin:-4px 0 10px">Estimation indicative basée sur moyennes FR.</div>
+
+                <!-- Barres -->
+                <div style="display:grid;gap:10px">
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-weight:600">
+                      <span>Lieu & Traiteur</span><span>3 314 €</span>
+                    </div>
+                    <div class="bar"><span style="width:58%"></span></div>
+                  </div>
+
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-weight:600">
+                      <span>Tenues & Alliances</span><span>571 €</span>
+                    </div>
+                    <div class="bar"><span style="width:10%"></span></div>
+                  </div>
+
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-weight:600">
+                      <span>Photo / Vidéo</span><span>457 €</span>
+                    </div>
+                    <div class="bar"><span style="width:8%"></span></div>
+                  </div>
+
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-weight:600">
+                      <span>Décoration & Fleurs</span><span>400 €</span>
+                    </div>
+                    <div class="bar"><span style="width:7%"></span></div>
+                  </div>
+
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-weight:600">
+                      <span>Musique / Animation</span><span>400 €</span>
+                    </div>
+                    <div class="bar"><span style="width:7%"></span></div>
+                  </div>
+
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-weight:600">
+                      <span>Divers & Imprévus</span><span>571 €</span>
+                    </div>
+                    <div class="bar"><span style="width:10%"></span></div>
+                  </div>
+                </div>
+
+                <!-- Boutons du bas (express ET avancé) -->
+                <div class="btn-group">
+                  <a class="btn secondary" href="/outils-premium/">Outils Premium & Packs</a>
+                  <a class="btn secondary" href="/partenaires/">Sélection partenaires : robes, déco…</a>
+                  <a class="btn ghost" id="dlChecklist" href="/checklist-mariage.pdf">Télécharger la checklist (PDF)</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Colonne droite : “pourquoi ce simulateur ?” -->
+          <aside>
+            <div class="tiles">
+              <div class="tile">
+                <h4>Pourquoi ce simulateur ?</h4>
+                <ul>
+                  <li>Estimation instantanée</li>
+                  <li>Répartition par postes</li>
+                  <li>Conseils pour économiser</li>
+                </ul>
+              </div>
+              <div class="tile">
+                <h4>Idées rapides</h4>
+                <ul>
+                  <li>Robes & tenues (sélection partenaires)</li>
+                  <li>Décoration Pinterest-friendly</li>
+                </ul>
+              </div>
+            </div>
+          </aside>
+        </div>
       </div>
-      <input id="guestsInput" type="number" min="10" max="500" value="50" style="display:none">
-
-      <div class="progress-bars">
-        <!-- tes barres d’avancement existantes ici -->
-      </div>
     </div>
 
-    <!-- AVANCÉ -->
-    <div id="avance" style="display:none">
-      <p>Réglages détaillés du budget mariage…</p>
-      <div class="progress-bars">
-        <!-- barres avancées -->
-      </div>
-    </div>
-
-    <!-- CTA EXPRESS -->
-    <div id="ctaExpress" style="display:none; gap:.6rem; margin-top:.6rem">
-      <a class="btn btn-premium" href="/packs.html">Outils Premium &amp; Packs (checklists, modèles)</a>
-      <a class="btn btn-ghost" href="/affiliations.html">Sélection partenaires : robes, déco, faire-part →</a>
-    </div>
-
-    <!-- CTA AVANCÉ -->
-    <div id="ctaAvance" style="display:none; gap:.6rem; margin-top:.6rem">
-      <a class="btn btn-premium" href="/packs.html">Outils Premium &amp; Packs</a>
-      <a class="btn btn-ghost" href="/affiliations.html">Sélection partenaires : robes, déco, faire-part →</a>
-      <a class="btn btn-primary" href="/checklist.pdf" download>Télécharger la checklist PDF</a>
-    </div>
-  </section>
-
-  <!-- SEO texte -->
-  <section class="seo-text">
-    <h2>Préparer son mariage avec sérénité</h2>
-    <p>Notre simulateur champêtre vous permet d’estimer votre budget en quelques clics, selon vos envies et le nombre d’invités. Que vous soyez dans une organisation rapide (mode Express) ou un suivi détaillé (mode Avancé), vous disposez d’outils pratiques et de partenaires de confiance.</p>
-    <p>Découvrez également nos checklists, modèles, et ressources premium pour ne rien oublier le jour J. Mariage bohème, chic, intime ou grandiose : adaptez votre budget en toute simplicité.</p>
-  </section>
-
-  <!-- Derniers articles -->
-  <section class="card blog-preview">
-    <h2 class="section-title">Derniers articles du blog</h2>
-
-    <div style="text-align:center; margin: .5rem 0 1rem">
-      <a href="/blog/" class="btn btn-primary">Voir tous les articles</a>
-    </div>
-
-    <div class="posts-grid">
-      {% for post in collections.posts | reverse | slice(0,3) %}
-        <a class="post-card" href="{{ post.url }}">
-          {% if post.data.cover %}
-            <img src="{{ post.data.cover }}" alt="{{ post.data.title }}">
-          {% endif %}
-          <h3>{{ post.data.title }}</h3>
-          <p>{{ post.data.excerpt | safe }}</p>
+    <!-- GUIDES POPULAIRES (on garde) -->
+    <section class="guides">
+      <h2 class="section-title">Guides populaires</h2>
+      <div class="three">
+        <a class="guide-card" href="/budget-mariage-50-invites/">
+          <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=800" alt="">
+          <h3>Budget mariage 50 invités</h3>
         </a>
-      {% endfor %}
-    </div>
-  </section>
+        <a class="guide-card" href="/budget-mariage-100-invites/">
+          <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=800" alt="">
+          <h3>Budget mariage 100 invités</h3>
+        </a>
+        <a class="guide-card" href="/mariage-petit-budget/">
+          <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=800" alt="">
+          <h3>Mariage petit budget : le guide</h3>
+        </a>
+      </div>
 
-</main>
+      <!-- Juste un petit bouton centré (pas de gros encadré “derniers articles”) -->
+      <div class="center" style="margin-top:16px">
+        <a href="/blog/" class="btn">Voir tous les articles</a>
+      </div>
+    </section>
 
-<footer>
-  <p>&copy; 2025 Mon Mariage Champêtre</p>
-</footer>
+    <footer>© <span id="y"></span> BudgetMariage.com — Outil gratuit</footer>
+  </div>
 
-<style>
-  .blog-preview{margin-top:1rem}
-  .posts-grid{display:grid;gap:1rem}
-  @media(min-width:900px){.posts-grid{grid-template-columns:repeat(3,1fr)}}
-  .post-card{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line, #e7e2d9);border-radius:12px;overflow:hidden;text-decoration:none;color:inherit}
-  .post-card img{width:100%;height:150px;object-fit:cover}
-  .post-card h3{font-size:1rem;margin:.6rem .75rem;color:var(--brand, #3e5c49)}
-  .post-card p{font-size:.9rem;color:var(--muted, #6f7b74);margin:0 .75rem .8rem}
-</style>
+  <script>
+    // Année footer
+    document.getElementById('y').textContent = new Date().getFullYear();
 
-<script>
-(function(){
-  var logo = document.querySelector('header h1');
-  if(logo && logo.tagName!=='A'){
-    logo.style.cursor='pointer';
-    logo.addEventListener('click', function(){ location.href='/' });
-  }
-})();
+    // Pills “invités” cliquables
+    const pills = document.querySelectorAll('#invitesPills .pill');
+    pills.forEach(p => p.addEventListener('click', () => {
+      const n = +p.dataset.n;
+      if(n>0){ /* ici branche ta logique existante */ }
+      else{
+        const v = prompt("Nombre d’invités ?");
+        if(v){ /* logique… */ }
+      }
+    }));
 
-// Pills invités
-const pillsWrap = document.querySelector('#guestsPills');
-const guestsField = document.querySelector('#guestsInput');
-if (pillsWrap && guestsField) {
-  pillsWrap.addEventListener('click', function(e){
-    const b = e.target.closest('button[data-val]');
-    if(!b) return;
-    pillsWrap.querySelectorAll('button[data-val]').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    const v = b.dataset.val;
-    if(v==='custom'){
-      guestsField.style.display='inline-block';
-      guestsField.focus();
-    }else{
-      guestsField.style.display='none';
-      guestsField.value = v;
-    }
-  });
-  if(!guestsField.value) guestsField.value = 50;
-}
-
-// Switch Express / Avancé
-const modeExpressBtn = document.getElementById('modeExpress');
-const modeAvanceBtn  = document.getElementById('modeAvance');
-const boxExpress     = document.getElementById('express');
-const boxAvance      = document.getElementById('avance');
-const ctaExpress     = document.getElementById('ctaExpress');
-const ctaAvance      = document.getElementById('ctaAvance');
-
-function setMode(which){
-  const isExpress = which==='express';
-  if(modeExpressBtn) modeExpressBtn.classList.toggle('active', isExpress);
-  if(modeAvanceBtn)  modeAvanceBtn.classList.toggle('active', !isExpress);
-  if(boxExpress)  boxExpress.style.display = isExpress ? '' : 'none';
-  if(boxAvance)   boxAvance.style.display  = isExpress ? 'none' : '';
-  if(ctaExpress)  ctaExpress.style.display = isExpress ? 'grid' : 'none';
-  if(ctaAvance)   ctaAvance.style.display  = isExpress ? 'none' : 'grid';
-}
-if(modeExpressBtn) modeExpressBtn.addEventListener('click', ()=>setMode('express'));
-if(modeAvanceBtn)  modeAvanceBtn .addEventListener('click', ()=>setMode('avance'));
-setMode('express');
-</script>
-
+    // Bouton Calculer (branche ta logique existante ici)
+    document.getElementById('btnCalculer').addEventListener('click', () => {
+      // calcule et mets à jour #total et les barres en te basant sur tes fonctions
+      // (placeholder visuel)
+      document.getElementById('total').textContent = '5 900 €';
+    });
+  </script>
 </body>
 </html>
