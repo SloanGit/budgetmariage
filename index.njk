@@ -1,304 +1,73 @@
-<!doctype html>
-<html lang="fr">
-<head>
-  <meta charset="utf-8">
-  <title>BudgetMariage – Simulateur de budget de mariage (express & avancé)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Calculez gratuitement le budget de votre mariage en 30 secondes. Mode express et avancé, répartition par postes, conseils & outils premium.">
+{% extends "base.njk" %}
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
-
-  <!-- Favicon (anneau) -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>💍</text></svg>">
-
-  <!-- Redirection Netlify CMS si #invite_token -->
-  <script>
-    if (location.hash && location.hash.includes('invite_token')) {
-      location.href = '/admin/' + location.hash;
-    }
-  </script>
-
-  <style>
-    :root{
-      --bg:#fbf9f4;         /* fond crème champêtre */
-      --card:#fff;
-      --text:#2a2f2c;
-      --muted:#6c776f;
-      --brand:#2f6b52;      /* vert foncé boutons/links */
-      --brand-weak:#e8f0eb; /* léger */
-      --gold:#c08a3b;       /* badge “Gratuit” */
-      --line:#e7e2d9;       /* traits */
-      --pill:#efe8db;       /* puces/pills */
-      --bar:#caa77a;        /* barre BG */
-      --bar-fill:#2f6b52;   /* barre fill (vert) */
-      --radius:14px;
-      --shadow:0 6px 24px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.04);
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0}
-    body{background:var(--bg);color:var(--text);font:16px/1.6 "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif}
-
-    /* Container global resserré + pas d’espace blanc en haut */
-    .container{max-width:1000px;margin:0 auto;padding:12px 16px 40px}
-
-    /* Header compact */
-    .site-top{display:flex;align-items:center;gap:10px;padding:8px 0}
-    .badge{background:var(--pill);color:#6b4a1f;border-radius:999px;padding:4px 8px;font-weight:700;font-size:12px}
-    .logo{font-family:"Playfair Display", serif;font-weight:800;font-size:26px;letter-spacing:.2px;margin-left:6px}
-    .logo a{color:var(--brand);text-decoration:none}
-    .tagline{margin-left:auto;color:var(--muted);font-size:13px}
-
-    /* Cartes */
-    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
-    .section{padding:18px}
-    .section-title{font-family:"Playfair Display",serif;font-size:28px;margin:0 0 14px}
-
-    /* Grille simulateur (gauche form + droite arguments) */
-    .grid-2{display:grid;gap:18px}
-    @media(min-width:980px){.grid-2{grid-template-columns:1.25fr .85fr}}
-
-    /* Panneau simulateur */
-    .panel{padding:16px 16px 12px}
-    .panel h2{font-family:"Playfair Display",serif;font-size:22px;margin:0 0 10px}
-
-    /* Pills nombres d’invités */
-    .pills{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
-    .pill{background:var(--pill);border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-weight:600;font-size:13px;cursor:pointer}
-    .pill:hover{background:#e6ddcc}
-
-    /* Select + champs */
-    .row{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
-    .field{flex:1;min-width:160px}
-    label{display:block;font-size:13px;color:var(--muted);margin:0 0 6px}
-    select,input[type="number"]{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff}
-
-    /* Boutons */
-    .btn{display:inline-block;background:var(--brand);color:#fff;border:none;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;text-decoration:none}
-    .btn.secondary{background:#fff;color:var(--brand);border:1px solid var(--brand)}
-    .btn.ghost{background:transparent;color:var(--brand);border:1px solid var(--line)}
-    .btn-group{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-
-    /* Résumé + barres */
-    .sum{font-size:28px;font-weight:800;margin:8px 0 4px}
-    .bar{height:10px;border-radius:8px;background:var(--bar);overflow:hidden}
-    .bar > span{display:block;height:100%;background:var(--bar-fill);width:60%}
-
-    /* Encarts arguments droite */
-    .tiles{display:grid;gap:10px}
-    .tile{border:1px dashed var(--line);border-radius:12px;padding:12px;background:#fff}
-    .tile h4{margin:0 0 6px;font-size:15px}
-    .tile ul{margin:0;padding-left:18px;color:var(--muted);font-size:14px}
-
-    /* Guides populaires */
-    .guides{margin-top:18px}
-    .three{display:grid;gap:16px}
-    @media(min-width:900px){.three{grid-template-columns:repeat(3,1fr)}}
-    .guide-card{display:block;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;box-shadow:var(--shadow)}
-    .guide-card img{width:100%;height:160px;object-fit:cover}
-    .guide-card h3{font-size:18px;margin:10px 12px;color:var(--brand)}
-
-    .center{display:flex;justify-content:center}
-    hr.sep{border:0;border-top:1px solid var(--line);margin:20px 0}
-
-    footer{color:var(--muted);font-size:13px;margin-top:26px}
-  </style>
-</head>
-<body>
-  <div class="container">
-    <!-- Header compact sans scroll initial -->
-    <div class="site-top">
-      <span class="badge">Gratuit</span>
-      <div class="logo"><a href="/">BudgetMariage</a></div>
-      <div class="tagline">Simulateur instantané</div>
+{% block content %}
+<main class="container mx-auto px-4 py-12">
+  
+  <!-- Bloc simulateur -->
+  <section id="simulateur" class="text-center mb-16">
+    <h1 class="text-4xl font-bold text-gray-800 mb-4">
+      Simulateur de Budget Mariage
+    </h1>
+    <p class="text-lg text-gray-600 mb-8">
+      Estimez en quelques secondes le budget de votre mariage selon vos besoins.
+    </p>
+    
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="#outil-premium" 
+         class="bg-yellow-600 text-white font-bold px-6 py-3 rounded-lg hover:bg-yellow-700 transition">
+         Outils Premium
+      </a>
+      <a href="#partenaires" 
+         class="bg-green-600 text-white font-bold px-6 py-3 rounded-lg hover:bg-green-700 transition">
+         Partenaires (robes, déco…)
+      </a>
+      <a href="#telecharger" 
+         class="bg-blue-600 text-white font-bold px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+         Télécharger le PDF
+      </a>
     </div>
+  </section>
 
-    <!-- SIMULATEUR -->
-    <div class="card">
-      <div class="section">
-        <div class="grid-2">
-          <!-- Colonne gauche : paramètres -->
-          <div>
-            <div class="panel">
-              <h2>Calculez votre budget</h2>
+  <!-- Texte SEO -->
+  <section class="prose max-w-3xl mx-auto mb-16">
+    <h2>Pourquoi utiliser notre simulateur de budget mariage ?</h2>
+    <p>
+      Préparer un mariage est une aventure excitante mais parfois complexe. 
+      Notre outil gratuit vous aide à estimer les coûts selon vos envies : 
+      nombre d’invités, lieu, décoration, traiteur, musique…
+    </p>
+    <p>
+      En quelques clics, vous obtenez une estimation claire, personnalisée et réaliste 
+      qui vous permet d’anticiper et d’optimiser vos dépenses. 
+      C’est l’outil parfait pour gérer votre budget sans stress.
+    </p>
+  </section>
 
-              <div class="pills" id="invitesPills">
-                <button class="pill" data-n="30">30</button>
-                <button class="pill" data-n="50">50</button>
-                <button class="pill" data-n="80">80</button>
-                <button class="pill" data-n="120">120</button>
-                <button class="pill" data-n="200">200</button>
-                <button class="pill" data-n="0">Autre…</button>
-              </div>
-
-              <div class="row">
-                <div class="field">
-                  <label>Style</label>
-                  <select id="style">
-                    <option>Standard</option>
-                    <option>Élégant</option>
-                    <option>Champêtre</option>
-                  </select>
-                </div>
-                <div class="field">
-                  <label>Région</label>
-                  <select id="region">
-                    <option>Île-de-France</option>
-                    <option>Bretagne</option>
-                    <option>Provence</option>
-                  </select>
-                </div>
-                <div class="field">
-                  <label>Imprévus (%)</label>
-                  <select id="imprevus">
-                    <option>5%</option>
-                    <option selected>10%</option>
-                    <option>15%</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="btn-group">
-                <button class="btn" id="btnCalculer">Calculer</button>
-                <a class="btn ghost" href="#avance">Mode avancé</a>
-              </div>
-
-              <hr class="sep">
-
-              <!-- Résumé -->
-              <div>
-                <div class="sum" id="total">5 713 €</div>
-                <div style="color:var(--muted);font-size:13px;margin:-4px 0 10px">Estimation indicative basée sur moyennes FR.</div>
-
-                <!-- Barres -->
-                <div style="display:grid;gap:10px">
-                  <div>
-                    <div style="display:flex;justify-content:space-between;font-weight:600">
-                      <span>Lieu & Traiteur</span><span>3 314 €</span>
-                    </div>
-                    <div class="bar"><span style="width:58%"></span></div>
-                  </div>
-
-                  <div>
-                    <div style="display:flex;justify-content:space-between;font-weight:600">
-                      <span>Tenues & Alliances</span><span>571 €</span>
-                    </div>
-                    <div class="bar"><span style="width:10%"></span></div>
-                  </div>
-
-                  <div>
-                    <div style="display:flex;justify-content:space-between;font-weight:600">
-                      <span>Photo / Vidéo</span><span>457 €</span>
-                    </div>
-                    <div class="bar"><span style="width:8%"></span></div>
-                  </div>
-
-                  <div>
-                    <div style="display:flex;justify-content:space-between;font-weight:600">
-                      <span>Décoration & Fleurs</span><span>400 €</span>
-                    </div>
-                    <div class="bar"><span style="width:7%"></span></div>
-                  </div>
-
-                  <div>
-                    <div style="display:flex;justify-content:space-between;font-weight:600">
-                      <span>Musique / Animation</span><span>400 €</span>
-                    </div>
-                    <div class="bar"><span style="width:7%"></span></div>
-                  </div>
-
-                  <div>
-                    <div style="display:flex;justify-content:space-between;font-weight:600">
-                      <span>Divers & Imprévus</span><span>571 €</span>
-                    </div>
-                    <div class="bar"><span style="width:10%"></span></div>
-                  </div>
-                </div>
-
-                <!-- Boutons du bas (express ET avancé) -->
-                <div class="btn-group">
-                  <a class="btn secondary" href="/outils-premium/">Outils Premium & Packs</a>
-                  <a class="btn secondary" href="/partenaires/">Sélection partenaires : robes, déco…</a>
-                  <a class="btn ghost" id="dlChecklist" href="/checklist-mariage.pdf">Télécharger la checklist (PDF)</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Colonne droite : “pourquoi ce simulateur ?” -->
-          <aside>
-            <div class="tiles">
-              <div class="tile">
-                <h4>Pourquoi ce simulateur ?</h4>
-                <ul>
-                  <li>Estimation instantanée</li>
-                  <li>Répartition par postes</li>
-                  <li>Conseils pour économiser</li>
-                </ul>
-              </div>
-              <div class="tile">
-                <h4>Idées rapides</h4>
-                <ul>
-                  <li>Robes & tenues (sélection partenaires)</li>
-                  <li>Décoration Pinterest-friendly</li>
-                </ul>
-              </div>
-            </div>
-          </aside>
-        </div>
-      </div>
+  <!-- Guides populaires -->
+  <section id="guides" class="text-center mb-12">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Guides populaires</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <a href="#" class="block rounded-lg overflow-hidden shadow hover:shadow-lg transition">
+        <img src="/images/guide-50.jpg" alt="Budget mariage 50 invités" class="w-full h-40 object-cover">
+        <p class="p-4 font-semibold">Budget mariage 50 invités</p>
+      </a>
+      <a href="#" class="block rounded-lg overflow-hidden shadow hover:shadow-lg transition">
+        <img src="/images/guide-100.jpg" alt="Budget mariage 100 invités" class="w-full h-40 object-cover">
+        <p class="p-4 font-semibold">Budget mariage 100 invités</p>
+      </a>
+      <a href="#" class="block rounded-lg overflow-hidden shadow hover:shadow-lg transition">
+        <img src="/images/guide-petit.jpg" alt="Mariage petit budget" class="w-full h-40 object-cover">
+        <p class="p-4 font-semibold">Mariage petit budget : le guide</p>
+      </a>
     </div>
+  </section>
 
-    <!-- GUIDES POPULAIRES (on garde) -->
-    <section class="guides">
-      <h2 class="section-title">Guides populaires</h2>
-      <div class="three">
-        <a class="guide-card" href="/budget-mariage-50-invites/">
-          <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=800" alt="">
-          <h3>Budget mariage 50 invités</h3>
-        </a>
-        <a class="guide-card" href="/budget-mariage-100-invites/">
-          <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=800" alt="">
-          <h3>Budget mariage 100 invités</h3>
-        </a>
-        <a class="guide-card" href="/mariage-petit-budget/">
-          <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=800" alt="">
-          <h3>Mariage petit budget : le guide</h3>
-        </a>
-      </div>
-
-      <!-- Juste un petit bouton centré (pas de gros encadré “derniers articles”) -->
-      <div class="center" style="margin-top:16px">
-        <a href="/blog/" class="btn">Voir tous les articles</a>
-      </div>
-    </section>
-
-    <footer>© <span id="y"></span> BudgetMariage.com — Outil gratuit</footer>
+  <!-- Blog -->
+  <div class="text-center mb-12">
+    <a href="/blog" class="bg-green-700 text-white font-bold px-6 py-3 rounded-lg hover:bg-green-800 transition">
+      Voir tous les articles
+    </a>
   </div>
 
-  <script>
-    // Année footer
-    document.getElementById('y').textContent = new Date().getFullYear();
-
-    // Pills “invités” cliquables
-    const pills = document.querySelectorAll('#invitesPills .pill');
-    pills.forEach(p => p.addEventListener('click', () => {
-      const n = +p.dataset.n;
-      if(n>0){ /* ici branche ta logique existante */ }
-      else{
-        const v = prompt("Nombre d’invités ?");
-        if(v){ /* logique… */ }
-      }
-    }));
-
-    // Bouton Calculer (branche ta logique existante ici)
-    document.getElementById('btnCalculer').addEventListener('click', () => {
-      // calcule et mets à jour #total et les barres en te basant sur tes fonctions
-      // (placeholder visuel)
-      document.getElementById('total').textContent = '5 900 €';
-    });
-  </script>
-</body>
-</html>
+</main>
+{% endblock %}
